@@ -1,11 +1,11 @@
 #!/bin/bash
 
 shopt -s extglob
-rm -rf package/boot/uboot-rockchip target/linux/rockchip/patches-5.10/.svn
+rm -rf package/boot/uboot-rockchip target/linux/rockchip/patches-5.4/.svn
 svn export --force https://github.com/friendlyarm/friendlywrt/branches/master/package/boot/uboot-rockchip package/boot/uboot-rockchip
 svn export --force https://github.com/friendlyarm/friendlywrt/branches/master/target/linux/rockchip/armv8/base-files target/linux/rockchip/armv8/base-files
 curl -sfLo target/linux/rockchip/image/armv8.mk https://raw.githubusercontent.com/friendlyarm/friendlywrt/master/target/linux/rockchip/image/armv8.mk
-svn co https://github.com/friendlyarm/friendlywrt/branches/master/target/linux/rockchip/patches-5.10 target/linux/rockchip/patches-5.10
+svn co https://github.com/friendlyarm/friendlywrt/branches/master/target/linux/rockchip/patches-5.4 target/linux/rockchip/patches-5.4
 rm -rf target/linux/rockchip/armv8/base-files/{etc/{uci-defaults/vendor.defaults,inittab,banner},root}
 
 sed -i 's,-mcpu=generic,-march=armv8-a+crypto+crc -mabi=lp64,g' include/target.mk
@@ -37,4 +37,4 @@ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
 CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
 CONFIG_MOTORCOMM_PHY=y
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.10
+' >> ./target/linux/rockchip/armv8/config-5.4
