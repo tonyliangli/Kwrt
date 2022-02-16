@@ -1,4 +1,8 @@
 test -n "$(uci -q set wizard.default.coremark)" || {
 uci -q set wizard.default.coremark="1"
+uci -q set wizard.default.autoupgrade_fm="0"
+uci -q set wizard.default.autoupgrade_pkg="0"
 uci commit wizard
+uci -q set network.lan.ipaddr="10.10.10.2"
+uci commit network
 }
