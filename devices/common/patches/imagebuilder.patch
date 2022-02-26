@@ -59,3 +59,25 @@
  		$(if $(USER_PROFILE),PROFILE="$(USER_PROFILE)")
  
  $(BIN_DIR)/profiles.json: FORCE
+
+--- a/include/image.mk
++++ b/include/image.mk
+@@ -33,6 +33,9 @@ KDIR=$(KERNEL_BUILD_DIR)
+ KDIR_TMP=$(KDIR)/tmp
+ DTS_DIR:=$(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts
+ 
++ifneq ($(PARTSIZE),)
++  CONFIG_TARGET_ROOTFS_PARTSIZE:=$(PARTSIZE)
++endif
+ IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,$(EXTRA_IMAGE_NAME))-)
+ IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,$(VERSION_NUMBER))-)
+ IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,$(VERSION_CODE))-)
+@@ -228,7 +231,7 @@ define Image/mkfs/squashfs-common
+ 	$(STAGING_DIR_HOST)/bin/mksquashfs4 $(call mkfs_target_dir,$(1)) $@ \
+ 		-nopad -noappend -root-owned \
+ 		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
+-		-processors 1
++		-processors 3 -mem 1024M
+ endef
+ 
+ ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
