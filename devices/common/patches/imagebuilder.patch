@@ -77,7 +77,7 @@
  		-nopad -noappend -root-owned \
  		-comp $(SQUASHFSCOMP) $(SQUASHFSOPT) \
 -		-processors 1
-+		-processors 3 -mem 1024M
++		-processors 2 -mem 1024M
  endef
  
  ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
