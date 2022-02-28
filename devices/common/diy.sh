@@ -16,7 +16,8 @@ shopt -s extglob
 # mv -f  .github/kernel-version.mk .github/kernel-5.4 .github/kernel-defaults.mk include/
 sed -i 's/ libelf//' tools/Makefile
 
-kernel_v="$(cat include/kernel-5.4 | grep LINUX_KERNEL_HASH-5.4* | cut -f 2 -d - | cut -f 1 -d ' ')"
+# kernel_v="$(cat include/kernel-5.4 | grep LINUX_KERNEL_HASH-5.4* | cut -f 2 -d - | cut -f 1 -d ' ')"
+kernel_v="5.4.179"
 sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
