@@ -1,6 +1,6 @@
 #!/bin/bash
 
-svn co -r 4347 https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.4 target/linux/x86/patches-5.4
+svn co -r 3958 https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.4 target/linux/x86/patches-5.4
 rm -rf target/linux/x86/patches-5.4/.svn
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3  kmod-igc/' target/linux/x86/Makefile
