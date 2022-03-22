@@ -263,7 +263,7 @@ jobs:
           echo $md5 >> $i/version.txt
           echo v$REPO_BRANCH >> $i/version.txt
         done
-        rm -rf openwrt/bin/targets/*/*/!(*.tar.gz,*buildinfo,packages)
+        rm -rf openwrt/bin/targets/*/*/!(*.tar.*|*buildinfo|packages)
         mkdir ${{ env.REPO_BRANCH }}
         cp -rf openwrt/bin/targets ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
@@ -314,7 +314,7 @@ jobs:
         username: root
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/*
+          cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/$(cat openwrt/include/kernel-5.10 | grep LINUX_KERNEL_HASH-5.10* | cut -f 2 -d - | cut -f 1 -d ' ')
           opkg &
 
     - name: Upload firmware for artifact
