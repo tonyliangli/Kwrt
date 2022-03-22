@@ -14,7 +14,7 @@ shopt -s extglob
 # mv -f .github/kernel package/
 # mv -f .github/linux-firmware package/firmware/
 # mv -f  .github/kernel-version.mk .github/kernel-5.4 .github/kernel-defaults.mk include/
-# sed -i 's/ libelf//' tools/Makefile
+sed -i 's/ libelf//' tools/Makefile
 
 # kernel_v="$(cat include/kernel-5.4 | grep LINUX_KERNEL_HASH-5.4* | cut -f 2 -d - | cut -f 1 -d ' ')"
 kernel_v="5.4.179"
