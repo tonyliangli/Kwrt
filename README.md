@@ -1,4 +1,4 @@
-# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S Raspberry-Pi-4B
+# OpenWrt with NGINX for x86_64 NanoPi-R2S R4S R2C Raspberry-Pi-4B N1
 [1]: https://img.shields.io/badge/license-GPLV2-brightgreen.svg
 [2]: /LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
@@ -8,7 +8,7 @@
 [7]: https://img.shields.io/github/v/release/hyird/Action-Openwrt
 [8]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/releases
 [10]: https://img.shields.io/badge/Contact-telegram-blue
-[11]: https://t.me/opwrts
+[11]: https://t.me/opwrt
 [12]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/actions/workflows/Openwrt-AutoBuild.yml/badge.svg
 [13]: https://github.com/kiddin9/OpenWrt_x86-r2s-r4s/actions
 
@@ -22,7 +22,7 @@
 <a href="https://t.me/opwrts" target="_blank">Telegram</a>
 ## 1. **特色**
 
-+ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.10, 与官方最新源码同步.
++ Cutting edge,openwrt官方openwrt-21.02分支版本, Kernel 5.15, 与官方最新源码同步.
 
 + 原生极致纯净,固件默认只包含基础上网功能, 后台在线选装插件,系统升级不丢失插件和配置.
 
