@@ -4,7 +4,7 @@ svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.4 t
 rm -rf target/linux/x86/patches-5.4/.svn
 rm -rf target/linux/x86/patches-5.4/500-backport-igc-5.15-driver.patch
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3  kmod-igc/' target/linux/x86/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3 kmod-igc kmod-drm-i915 kmod-mlx4-core/' target/linux/x86/Makefile
 
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
 
