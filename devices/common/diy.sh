@@ -17,6 +17,7 @@ shopt -s extglob
 # mv -f .github/linux-firmware package/firmware/
 # mv -f  .github/{kernel-*,netfilter.mk} include/
 sed -i 's/ libelf//' tools/Makefile
+sed -i "1181c \ \ DEPENDS:=@PCI_SUPPORT +kmod-ptp" package/kernel/linux/modules/netdevices.mk
 
 # kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 kernel_v="5.4.179"
