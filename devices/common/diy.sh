@@ -12,6 +12,8 @@ shopt -s extglob
 # cd -
 sed -i 's/ libelf//' tools/Makefile
 sed -i "1181c \ \ DEPENDS:=@PCI_SUPPORT +kmod-ptp" package/kernel/linux/modules/netdevices.mk
+sed -i "9c LINUX_VERSION-5.4 = .179" include/kernel-version.mk
+sed -i "11c LINUX_KERNEL_HASH-5.4.179 = 2c9bdec0922a95aff34e8d53d2e0ecf7e842033cd908d2959a43d34afb5d897d" include/kernel-version.mk
 
 # kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 kernel_v="5.4.179"
