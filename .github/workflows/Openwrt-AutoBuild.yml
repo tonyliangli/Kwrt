@@ -134,7 +134,7 @@ jobs:
         elif [[ ${{matrix.target}} == "mediatek_mt7622" ]]; then
             curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/$REPO_BRANCH/targets/mediatek/mt7622/openwrt-sdk-mediatek-mt7622_gcc-8.4.0_musl.Linux-x86_64.tar.xz || true
         elif [[ ${{matrix.target}} == "ipq807x" ]]; then
-            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/$REPO_BRANCH/targets/ipq807x/generic/openwrt-sdk-mediatek-mt7622_gcc-8.4.0_musl.Linux-x86_64.tar.xz || true
+            curl -fL -m 60 -o sdk.tar.xz https://op.supes.top/releases/$REPO_BRANCH/targets/ipq807x/generic/openwrt-sdk-ipq807x-generic_gcc-8.4.0_musl.Linux-x86_64.tar.xz || true
         fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
