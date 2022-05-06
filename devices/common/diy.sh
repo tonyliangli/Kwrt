@@ -14,7 +14,7 @@ sed -i 's/ libelf//' tools/Makefile
 sed -i "1181c \ \ DEPENDS:=@PCI_SUPPORT +kmod-ptp" package/kernel/linux/modules/netdevices.mk
 
 # kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
-kernel_v="5.4.179"
+kernel_v="5.4.188"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
