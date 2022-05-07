@@ -44,7 +44,7 @@ sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config
 rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
 rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
 # curl -sfL https://raw.githubusercontent.com/coolsnowwolf/packages/master/libs/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch -o package/feeds/packages/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch
-rm -f package/feeds/kiddin9/smartdns; svn export -r 4548 https://github.com/kiddin9/openwrt-packages/trunk/smartdns package/feeds/kiddin9/smartdns
+# rm -f package/feeds/kiddin9/smartdns; svn export -r 4548 https://github.com/kiddin9/openwrt-packages/trunk/smartdns package/feeds/kiddin9/smartdns
 
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
