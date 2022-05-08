@@ -220,12 +220,10 @@ jobs:
       id: organize
       run: |
         shopt -s extglob
-        mkdir -p firmware/${{matrix.target}} kmods
+        mkdir -p firmware/${{matrix.target}}
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
-        cp -rf openwrt/bin/targets/*/*/packages ./kmods/${{ env.KERNEL }} || true
-        rm -rf openwrt/bin/targets/*/*/packages/*.ipk
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
