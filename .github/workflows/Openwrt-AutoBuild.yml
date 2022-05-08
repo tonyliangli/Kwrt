@@ -349,7 +349,7 @@ jobs:
     - name: Build and push docker image
       uses: docker/build-push-action@master
       continue-on-error: true
-      if: env.DOCKER_ID && env.DOCKER_PASSWD && ! contains(github.event.action, 'noser') && ${{matrix.target}} == "x86_64"
+      if: env.DOCKER_ID && env.DOCKER_PASSWD && ! contains(github.event.action, 'noser') && github.event.client_payload.target == "x86_64"
       with:
         platforms: ${{ env.ARCH }}
         file: Dockerfile
