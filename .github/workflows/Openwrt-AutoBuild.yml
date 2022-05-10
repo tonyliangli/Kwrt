@@ -220,12 +220,10 @@ jobs:
       id: organize
       run: |
         shopt -s extglob
-        mkdir -p firmware/${{matrix.target}} kmods
+        mkdir -p firmware/${{matrix.target}}
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cp openwrt/${{matrix.target}}.config  ./firmware/${{matrix.target}}/${{matrix.target}}.config || true
         cp openwrt/build_dir/target-*/linux-*/linux-*/.config ./firmware/${{matrix.target}}/${{matrix.target}}_kernel.config
-        cp -rf openwrt/bin/targets/*/*/packages ./kmods/${{ env.KERNEL }} || true
-        rm -rf openwrt/bin/targets/*/*/packages/*.ipk
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
@@ -249,17 +247,6 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/firmware/"
-
-    - name: Deploy kmods to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: kmods/
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/"
 
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
