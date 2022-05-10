@@ -18,7 +18,7 @@ sed -i "11c LINUX_KERNEL_HASH-5.4.179 = 2c9bdec0922a95aff34e8d53d2e0ecf7e842033c
 # kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 kernel_v="5.4.179"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-# sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
+sed -i "s?targets/%S/packages?packages/%A/kmods/$kernel_v?" include/feeds.mk
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
