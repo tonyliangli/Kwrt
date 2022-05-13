@@ -294,16 +294,16 @@ jobs:
           cd /www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/
           opkg &
 
-    - run: rm -rf ${{ env.REPO_BRANCH }}/targets/*/*/{packages,openwrt-sdk*}
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
       continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
-        run: |
         path: |
+          ./firmware/
           ${{ env.REPO_BRANCH }}
+          openwrt/bin/packages/*/base/*-firmware*
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
