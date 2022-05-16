@@ -38,7 +38,7 @@ rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,netw
 ./scripts/feeds update -a
 ./scripts/feeds install -a -p kiddin9
 ./scripts/feeds install -a
-cd feeds/kiddin9; git pull; cd -
+cd feeds/kiddin9; git pull origin 60e9e0457b67427c0967ed0813bfb1a4c0fe987d; cd -
 
 sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 35s/mem.total - mem.available - mem.free/mem.total - mem.free/" package/feeds/kiddin9/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
