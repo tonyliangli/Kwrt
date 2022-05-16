@@ -42,7 +42,7 @@ cd feeds/kiddin9; git pull origin 60e9e0457b67427c0967ed0813bfb1a4c0fe987d; cd -
 
 sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 35s/mem.total - mem.available - mem.free/mem.total - mem.free/" package/feeds/kiddin9/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
-sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" package/feeds/kiddin9/diy/patches/status.patch
+sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
 rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
 rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
 # curl -sfL https://raw.githubusercontent.com/coolsnowwolf/packages/master/libs/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch -o package/feeds/packages/xr_usb_serial_common/patches/0001-fix-build-with-kernel-5.15.patch
