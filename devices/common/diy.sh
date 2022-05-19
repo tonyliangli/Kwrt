@@ -30,7 +30,7 @@ sed -i "/dnsmasq \\\/d" include/target.mk
 
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
-sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git;60e9e0457b67427c0967ed0813bfb1a4c0fe987d' feeds.conf.default
+sed -i '$a src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git^60e9e0457b67427c0967ed0813bfb1a4c0fe987d' feeds.conf.default
 }
 
 rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
