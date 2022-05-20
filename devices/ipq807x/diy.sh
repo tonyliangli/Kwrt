@@ -11,9 +11,13 @@ svn export --force https://github.com/Boos4721/openwrt/trunk/package/qca package
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/qat package/qat
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel package/kernel
 
-rm -rf target/linux
-svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux target/linux
+rm -rf target/linux/generic
+svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux target/linux/generic
 rm -rf target/linux/generic/hack-5.15/531-debloat_lzma.patch target/linux/generic/hack-5.15/600-bridge_offload.patch
+rm -rf target/linux/ipq807x/!(patches-5.15)
+svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x
+rm -rf target/linux/ipq807x/{.svn,patches-5.15/.svn}
+svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x/patches-5.15 target/linux/ipq807x/patches-5.15
 
 sed -i 's/autocore-arm /my-autocore-arm /' target/linux/ipq807x/Makefile
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += luci-app-turboacc/' target/linux/ipq807x/Makefile
