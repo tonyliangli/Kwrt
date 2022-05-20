@@ -10,11 +10,11 @@ shopt -s extglob
 # [ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
 # cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} tools/firmware-utils package/utils/ucode ../
 # cd -
-# cd -
 sed -i 's/ libelf//' tools/Makefile
 sed -i "1181c \ \ DEPENDS:=@PCI_SUPPORT +kmod-ptp" package/kernel/linux/modules/netdevices.mk
 # sed -i "9c LINUX_VERSION-5.4 = .179" include/kernel-version.mk
 # sed -i "11c LINUX_KERNEL_HASH-5.4.179 = 2c9bdec0922a95aff34e8d53d2e0ecf7e842033cd908d2959a43d34afb5d897d" include/kernel-version.mk
+
 # kernel_v="$(cat include/kernel-5.15 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 kernel_v="5.4.188"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
@@ -24,7 +24,6 @@ sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' pac
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-app-attendedsysupgrade luci-base luci-compat luci-lib-ipkg \
 coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash /" include/target.mk
-sed -i "s/procd-ujail//" include/target.mk
 
 # sh -c "curl -sfL https://github.com/coolsnowwolf/lede/commit/06fcdca1bb9c6de6ccd0450a042349892b372220.patch | patch -d './' -p1 --forward"
 

@@ -118,7 +118,7 @@ jobs:
         [ "${{ env.REPO_BRANCH }}" ] ||
             REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
                -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
-               -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v22 | tail -n 1 | sed -e 's/v//')"
+               -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v21 | tail -n 1 | sed -e 's/v//')"
         git clone $REPO_URL -b v$REPO_BRANCH openwrt
         if [[ "${{ contains(github.event.action, 'nosdk') }}" != "true" ]]; then
         cd openwrt
@@ -197,6 +197,13 @@ jobs:
         make download -j$(($(nproc)+1)) &
         sleep 5
 
+    - name: Cache
+      uses: klever1988/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        clean: ${{ contains(github.event.action, 'nocache') }}
+        prefix: ${{ github.workspace }}/openwrt
+
     - name: Compile the firmware
       id: compile
       run: |
@@ -215,7 +222,7 @@ jobs:
       continue-on-error: true
       run: |
         shopt -s extglob
-        mkdir -p firmware/${{matrix.target}} kmods
+        mkdir -p firmware/${{matrix.target}}
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cd openwrt/bin/targets/*/*/
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
@@ -247,17 +254,6 @@ jobs:
         REMOTE_HOST: op.supes.top
         REMOTE_USER: root
         TARGET: "/www/wwwroot/op.supes.top/firmware/"
-
-    - name: Deploy kmods to server
-      uses: easingthemes/ssh-deploy@main
-      if: env.SSH_PRIVATE_KEY && ! contains(github.event.action, 'noser')
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-avzr"
-        SOURCE: kmods/
-        REMOTE_HOST: op.supes.top
-        REMOTE_USER: root
-        TARGET: "/www/wwwroot/op.supes.top/packages/${{ env.MTARGET }}/kmods/"
 
     - name: Deploy imagebuilder to server
       uses: easingthemes/ssh-deploy@main
