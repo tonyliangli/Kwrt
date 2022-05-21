@@ -12,7 +12,7 @@ svn export --force https://github.com/Boos4721/openwrt/trunk/package/qat package
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel package/kernel
 
 
-rm -rf target/linux/generic rm -rf target/linux/ipq807x/!(patches-5.15)
+rm -rf target/linux/generic target/linux/ipq807x/!(patches-5.15)
 svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux/generic target/linux/generic
 rm -rf target/linux/generic/hack-5.15/531-debloat_lzma.patch target/linux/generic/hack-5.15/600-bridge_offload.patch
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x
