@@ -13,7 +13,7 @@ svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel pack
 
 
 rm -rf target/linux/!(Makefile)
-svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux target/linux/generic
+svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux/generic target/linux/generic
 rm -rf target/linux/generic/hack-5.15/531-debloat_lzma.patch target/linux/generic/hack-5.15/600-bridge_offload.patch
 rm -rf target/linux/ipq807x
 svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x
