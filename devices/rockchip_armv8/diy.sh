@@ -9,7 +9,7 @@ rm -rf target/linux/rockchip/!(Makefile|patches-5.10)
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
 rm -rf target/linux/rockchip/{.svn,patches-5.10/.svn}
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip/patches-5.10 target/linux/rockchip/patches-5.10
-rm -rf target/linux/rockchip/patches-5.10/002-net-usb* target/linux/rockchip/patches-5.10/003-dt-bindings*
+rm -rf target/linux/rockchip/patches-5.10/{002-net-usb*,003-dt-bindings*,006-rockchip-rk3399}
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 
