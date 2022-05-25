@@ -48,6 +48,7 @@ jobs:
 
     - name: Load Settings.ini
       run: |
+        echo ${{matrix.target}}
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
         if [ -f "devices/${{matrix.target}}/settings.ini" ]; then
           source "${GITHUB_WORKSPACE}/devices/${{matrix.target}}/settings.ini"
@@ -226,6 +227,7 @@ jobs:
         mkdir -p firmware/${{matrix.target}}
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cd openwrt/bin/targets/*/*/
+        mv -f profiles.json profiles.json.b
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{matrix.target}}_kernel.config || true
         mv -f packages ${{ env.KERNEL }}

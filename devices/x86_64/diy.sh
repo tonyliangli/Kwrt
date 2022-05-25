@@ -1,10 +1,13 @@
 #!/bin/bash
 
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.4 target/linux/x86/patches-5.4
-rm -rf target/linux/x86/patches-5.4/.svn
+SHELL_FOLDER=$(dirname $(readlink -f "$0"))
+bash $SHELL_FOLDER/../common/kernel_5.15.sh
+
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.15 target/linux/x86/patches-5.15
+rm -rf target/linux/x86/patches-5.15/.svn
 # rm -rf target/linux/x86/patches-5.4/500-backport-igc-5.15-driver.patch
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3 kmod-igc kmod-drm-i915 kmod-mlx4-core kmod-usb2 kmod-usb3 fdisk/' target/linux/x86/Makefile
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += my-autocore-x86 lm-sensors-detect kmod-r8125 kmod-vmxnet3 kmod-igc kmod-drm-i915 kmod-mlx4-core kmod-usb2 kmod-usb3 fdisk lsblk/' target/linux/x86/Makefile
 
 mv -f tmp/r81* feeds/kiddin9/
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
