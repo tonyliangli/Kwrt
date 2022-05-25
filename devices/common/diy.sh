@@ -10,11 +10,13 @@ kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - |
 kernel_v="5.4.188"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
 sed -i "s/DEFAULT_PACKAGES:=/DEFAULT_PACKAGES:=luci-app-advanced luci-app-firewall luci-app-gpsysupgrade luci-app-opkg luci-app-upnp luci-app-autoreboot \
 luci-app-wizard luci-app-attendedsysupgrade luci-base luci-compat luci-lib-ipkg \
 coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash /" include/target.mk
+# sed -i "s/procd-ujail//" include/target.mk
 
 sed -i '/	refresh_config();/d' scripts/feeds
 [ ! -f feeds.conf ] && {
@@ -29,11 +31,10 @@ rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,netw
 cd feeds/kiddin9; git pull; cd -
 
 mv -f feeds/kiddin9/r81* tmp/
+
 sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 35s/mem.total - mem.available - mem.free/mem.total - mem.free/" package/feeds/kiddin9/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
-rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
-rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/data/source.list package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/data/source.list
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/kpupdate package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/kpupdate; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/kpupdate
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/etc/init.d/koolproxy package/feeds/kiddin9/luci-app-ikoolproxy/root/etc/init.d/koolproxy; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/root/etc/init.d/koolproxy
@@ -41,7 +42,7 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.4
 rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,220-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
