@@ -37,9 +37,9 @@ index 2a306b5f4289..0a759dd0ebcd 100644
    SUBMENU:=$(VIDEO_MENU)
    TITLE:=Direct Rendering Manager (DRM) support
    HIDDEN:=1
--  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +PACKAGE_kmod-backlight:kmod-backlight
+-  DEPENDS:=+kmod-dma-buf +kmod-i2c-core
 -  KCONFIG:=CONFIG_DRM
-+ DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +PACKAGE_kmod-backlight:kmod-backlight
++  DEPENDS:=+kmod-dma-buf +kmod-i2c-core +kmod-i2c-algo-bit +PACKAGE_kmod-backlight:kmod-backlight
 +  KCONFIG:=	\
 +	CONFIG_DRM	\
 +	CONFIG_DRM_PANEL_ORIENTATION_QUIRKS=y	\
@@ -51,14 +51,14 @@ index 2a306b5f4289..0a759dd0ebcd 100644
  	$(LINUX_DIR)/drivers/gpu/drm/drm_panel_orientation_quirks.ko
 @@ -300,8 +322,6 @@ define KernelPackage/drm-imx
    TITLE:=Freescale i.MX DRM support
-   DEPENDS:=@TARGET_imx +kmod-drm-kms-helper
+   DEPENDS:=@TARGET_imx6 +kmod-drm-kms-helper
    KCONFIG:=CONFIG_DRM_IMX \
 -	CONFIG_DRM_FBDEV_EMULATION=y \
 -	CONFIG_DRM_FBDEV_OVERALLOC=100 \
  	CONFIG_IMX_IPUV3_CORE \
  	CONFIG_RESET_CONTROLLER=y \
  	CONFIG_DRM_IMX_IPUV3 \
-@@ -1028,3 +1048,38 @@ define KernelPackage/video-gspca-konica/description
+@@ -1019,3 +1039,38 @@ define KernelPackage/video-gspca-konica/description
  endef
  
  $(eval $(call KernelPackage,video-gspca-konica))
