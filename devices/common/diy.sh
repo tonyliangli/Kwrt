@@ -1,12 +1,12 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
-# sed -i "9c LINUX_VERSION-5.4 = .179" include/kernel-version.mk
-# sed -i "11c LINUX_KERNEL_HASH-5.4.179 = 2c9bdec0922a95aff34e8d53d2e0ecf7e842033cd908d2959a43d34afb5d897d" include/kernel-version.mk
 # kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
 kernel_v="5.4.188"
 echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
 sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+# sed -i "9c LINUX_VERSION-5.4 = .179" include/kernel-version.mk
+# sed -i "11c LINUX_KERNEL_HASH-5.4.179 = 2c9bdec0922a95aff34e8d53d2e0ecf7e842033cd908d2959a43d34afb5d897d" include/kernel-version.mk
 
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
@@ -42,7 +42,7 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.10 target/linux/generic/hack-5.4
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,220-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
