@@ -35,6 +35,7 @@ sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/;
 sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
 rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
 rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
+rm -f package/feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang package/feeds/kiddin9/lang/golang
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/data/source.list package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/data/source.list
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/kpupdate package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/kpupdate; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/kpupdate
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/etc/init.d/koolproxy package/feeds/kiddin9/luci-app-ikoolproxy/root/etc/init.d/koolproxy; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/root/etc/init.d/koolproxy
