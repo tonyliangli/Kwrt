@@ -17,6 +17,7 @@ curl -sfL https://raw.githubusercontent.com/Boos4721/openwrt/master/package/kern
 
 rm -rf target/linux/generic target/linux/ipq807x/!(patches-5.15)
 svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux/generic target/linux/generic
+rm -rf target/linux/generic/hack-5.15/650-netfilter-add-xt_FLOWOFFLOAD-target.patch
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x target/linux/ipq807x
 rm -rf target/linux/ipq807x/{.svn,patches-5.15/.svn}
 svn co https://github.com/Boos4721/openwrt/trunk/target/linux/ipq807x/patches-5.15 target/linux/ipq807x/patches-5.15
