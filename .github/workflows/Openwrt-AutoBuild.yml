@@ -125,8 +125,6 @@ jobs:
           git checkout ${{ env.REPO_BRANCH }}
         fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
-        echo "$REPO_BRANCH"
         
     - name: Load custom configuration
       run: |
