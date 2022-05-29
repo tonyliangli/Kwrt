@@ -11,7 +11,8 @@ svn export --force https://github.com/Boos4721/openwrt/trunk/package/firmware/at
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/firmware/ath11k-firmware package/firmware/ath11k-firmware
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/qca package/qca
 svn export --force https://github.com/Boos4721/openwrt/trunk/package/qat package/qat
-svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel package/kernel
+svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel/mac80211 package/kernel/mac80211
+svn export --force https://github.com/Boos4721/openwrt/trunk/package/kernel/linux package/kernel/linux
 
 rm -rf target/linux/generic target/linux/ipq807x/!(patches-5.15)
 svn export --force https://github.com/Boos4721/openwrt/trunk/target/linux/generic target/linux/generic
