@@ -24,6 +24,7 @@ sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages;maste
 rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
 
 ./scripts/feeds update -a
+rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
 ./scripts/feeds install -a -p kiddin9
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
@@ -35,7 +36,6 @@ sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/;
 sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
 rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
 rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
-rm -rf package/feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang package/feeds/packages/lang/golang
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/data/source.list package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/data/source.list
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/kpupdate package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/kpupdate; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/kpupdate
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/etc/init.d/koolproxy package/feeds/kiddin9/luci-app-ikoolproxy/root/etc/init.d/koolproxy; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/root/etc/init.d/koolproxy
