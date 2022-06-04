@@ -25,8 +25,7 @@ rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,netw
 
 ./scripts/feeds update -a
 rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
-./scripts/feeds install -a -p kiddin9
-./scripts/feeds install -a
+./scripts/feeds install -a -p kiddin9 -f
 cd feeds/kiddin9; git pull; cd -
 
 mv -f feeds/kiddin9/r81* tmp/
