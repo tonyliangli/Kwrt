@@ -70,6 +70,8 @@ jobs:
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ramips_mt7621" ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "ipq40xx_generic" ]]; then
+            echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
@@ -187,6 +189,7 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
+        df -hT
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
         make -j$(($(nproc)+1)) || (curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage" ; make -j1 V=s)
