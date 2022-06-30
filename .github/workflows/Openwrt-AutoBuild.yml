@@ -66,12 +66,14 @@ jobs:
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
             echo "MTARGET=x86_64" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622) ]]; then
+        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x|mediatek_mt7622|bcm27xx_bcm2710) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} == "ramips_mt7621" ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} == "ipq40xx_generic" ]]; then
+        elif [[ ${{matrix.target}} =~ (ipq40xx_generic|bcm27xx_bcm2709) ]]; then
             echo "MTARGET=arm_cortex-a7_neon-vfpv4" >> $GITHUB_ENV
+        elif [[ ${{matrix.target}} == "bcm53xx" ]]; then
+            echo "MTARGET=arm_cortex-a9" >> $GITHUB_ENV
         else
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
@@ -195,6 +197,7 @@ jobs:
         make -j$(($(nproc)+1)) || (curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage" ; make -j1 V=s)
         sed -i "s/# CONFIG_IB is not set/CONFIG_IB=y/" .config
         rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
+        rm -rf staging_dir/toolchain-*/initial
    
     - name: Check space usage
       run: df -hT
@@ -364,7 +367,7 @@ jobs:
       uses: GitRML/delete-workflow-runs@main
       continue-on-error: true
       with:
-        retain_days: 30
+        retain_days: 100
         keep_minimum_runs: 0
 
     - name: Remove old Releases
