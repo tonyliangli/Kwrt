@@ -16,8 +16,8 @@ on:
   #  - cron: 30 18 * * *
   workflow_dispatch:
     inputs:
-      version:
-        description: 'Version'
+      param:
+        description: 'parameter'
         required: false
         default: ''
 
@@ -38,6 +38,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
+    - name: cancel running workflows
+      uses: styfle/cancel-workflow-action@main
+      if: contains(${{ github.event.inputs.param }}, 'cw')
+      with:
+        workflow_id: 4439867
+        access_token: ${{ github.token }}
+
     - name: Load Settings.ini
       run: |
         source "${GITHUB_WORKSPACE}/devices/common/settings.ini"
@@ -54,5 +61,5 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "x86_64 ${{ github.event.inputs.version }}", "client_payload": {"target": "x86_64"}}'
+          -d '{"event_type": "x86_64", "client_payload": {"target": "x86_64"}}'
 
