@@ -112,7 +112,7 @@
  endef
  
  ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
-@@ -291,11 +292,34 @@ define Image/gzip-ext4-padded-squashfs
+@@ -291,11 +292,35 @@ define Image/gzip-ext4-padded-squashfs
  
  endef
  
