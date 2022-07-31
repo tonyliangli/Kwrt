@@ -112,7 +112,7 @@
  endef
  
  ifeq ($(CONFIG_TARGET_ROOTFS_SECURITY_LABELS),y)
-@@ -291,11 +292,35 @@ define Image/gzip-ext4-padded-squashfs
+@@ -291,11 +292,34 @@ define Image/gzip-ext4-padded-squashfs
  
  endef
  
@@ -130,11 +130,10 @@
 +	DEVICE_ID="$(PROFILE_SANITIZED)" \
 +	BIN_DIR="$(BIN_DIR)" \
 +	SOURCE_DATE_EPOCH=$(SOURCE_DATE_EPOCH) \
-+	FILE_NAME="$(ROOTFSTZ)" \
-+	FILE_DIR="$(BIN_DIR)" \
-+	FILE_TYPE="rootfs" \
-+	FILE_FILESYSTEM="rootfs" \
-+	DEVICE_IMG_PREFIX="$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED))" \
++	IMAGE_NAME="$(ROOTFSTZ)" \
++	IMAGE_TYPE="rootfs" \
++	IMAGE_FILESYSTEM="rootfs" \
++	IMAGE_PREFIX="$(IMG_PREFIX)" \
 +	DEVICE_VENDOR="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f1)" \
 +	DEVICE_MODEL="$(shell echo $($(PROFILE)_NAME) | cut -d " " -f2-)" \
 +	DEVICE_VARIANT="$(DEVICE_VARIANT)" \
