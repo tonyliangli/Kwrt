@@ -1,6 +1,6 @@
 --- a/scripts/download.pl
 +++ b/scripts/download.pl
-@@ -80,8 +80,8 @@ ($)
+@@ -82,8 +82,8 @@ ($)
  	}
  
  	return $have_curl
