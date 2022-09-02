@@ -11,7 +11,7 @@ sed -i 's/kmod-igb /kmod-igb-intel /' target/linux/x86/image/64.mk
 
 sed -i 's/FEATURES:=/FEATURES:=usb usbgadget/' target/linux/x86/Makefile
 
-mv -f tmp/r81* feeds/kiddin9/
+mv -f tmp/{r81*,igb-intel} feeds/kiddin9/
 sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
 sed -i 's/256/1024/g' target/linux/x86/image/Makefile
 
