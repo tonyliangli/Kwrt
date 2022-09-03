@@ -38,6 +38,7 @@ sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/;
 sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
 sed -i "113s/:/#/" package/feeds/kiddin9/luci-app-bypass/luasrc/controller/bypass.lua
 sed -i "22s/:/#/; 26s/:/#/" package/feeds/kiddin9/luci-app-bypass/root/usr/share/bypass/by-switch
+sed -i "s/(CpuMark/\\\ (CpuMark/" package/feeds/kiddin9/my-default-settings/files/sbin/coremark
 mv package/feeds/kiddin9/my-default-settings/files/sbin/coremark package/feeds/kiddin9/my-default-settings/files/sbin/cpumark
 rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
 rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
