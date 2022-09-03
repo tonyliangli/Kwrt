@@ -26,6 +26,7 @@ sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-de
 
 ./scripts/feeds update -a
 rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
+rm -rf feeds/packages/net/nginx-util/files/uci.conf.template && rm -rf feeds/packages/net/nginx-util/files/nginx.config
 ./scripts/feeds install -a -p kiddin9
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
@@ -37,6 +38,7 @@ sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/;
 sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
 sed -i "113s/:/#/" package/feeds/kiddin9/luci-app-bypass/luasrc/controller/bypass.lua
 sed -i "22s/:/#/; 26s/:/#/" package/feeds/kiddin9/luci-app-bypass/root/usr/share/bypass/by-switch
+mv package/feeds/kiddin9/my-default-settings/files/sbin/coremark package/feeds/kiddin9/my-default-settings/files/sbin/cpumark
 rm -f package/feeds/packages/libpfring; svn export https://github.com/openwrt/packages/trunk/libs/libpfring package/feeds/kiddin9/libpfring
 rm -f package/feeds/packages/xtables-addons; svn export https://github.com/openwrt/packages/trunk/net/xtables-addons package/feeds/kiddin9/xtables-addons
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root/usr/share/koolproxy/data/source.list package/feeds/kiddin9/luci-app-ikoolproxy/root/usr/share/koolproxy/data/source.list
