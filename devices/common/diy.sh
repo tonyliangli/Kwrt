@@ -31,7 +31,7 @@ cp -f feeds/kiddin9/my-default-settings/files/etc/nginx/uci.conf.template feeds/
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
 
-mv -f feeds/kiddin9/{r81*,igb-intel,rtl8189es} tmp/
+mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
 sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 35s/mem.total - mem.available - mem.free/mem.total - mem.free/" package/feeds/kiddin9/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
