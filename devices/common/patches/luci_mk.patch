@@ -22,9 +22,10 @@
  ifndef Package/$(PKG_NAME)/postinst
 +ifneq ($(wildcard ${CURDIR}/htdocs/luci-static/resources/view),)
  define Package/$(PKG_NAME)/postinst
- [ -n "$${IPKG_INSTROOT}" ] || { \
- 	rm -f /tmp/luci-indexcache
-@@ -217,7 +222,18 @@ define Package/$(PKG_NAME)/postinst
+ [ -n "$${IPKG_INSTROOT}" ] || {$(foreach script,$(LUCI_DEFAULTS),
+ 	(. /etc/uci-defaults/$(script)) && rm -f /etc/uci-defaults/$(script))
+@@ -217,8 +222,19 @@ define Package/$(PKG_NAME)/postinst
+ 	killall -HUP rpcd 2>/dev/null
  	exit 0
  }
  endef
@@ -43,10 +44,10 @@
  
  # some generic macros that can be used by all packages
  ifeq ($(LUCI_MINIFY_JS),1)
-@@ -333,5 +349,5 @@ define LuciTranslation
+@@ -334,5 +350,5 @@ define LuciTranslation
  
  endef
  
--$(foreach lang,$(LUCI_LANGUAGES),$(if $(LUCI_LANG.$(lang)),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang)))))
-+# $(foreach lang,$(LUCI_LANGUAGES),$(if $(LUCI_LANG.$(lang)),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang)))))
+-$(foreach lang,$(LUCI_LANGUAGES),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang))))
++# $(foreach lang,$(LUCI_LANGUAGES),$(eval $(call LuciTranslation,$(firstword $(LUCI_LC_ALIAS.$(lang)) $(lang)),$(lang))))
  $(foreach pkg,$(LUCI_BUILD_PACKAGES),$(eval $(call BuildPackage,$(pkg))))
