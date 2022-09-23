@@ -3,7 +3,7 @@
 # SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 # bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.4 target/linux/x86/patches-5.4
+svn co -r 4406 https://github.com/coolsnowwolf/lede/trunk/target/linux/x86/patches-5.4 target/linux/x86/patches-5.4
 rm -rf target/linux/x86/patches-5.4/.svn
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += autocore-x86 kmod-usb-hid kmod-mmc kmod-sdhci usbutils pciutils lm-sensors-detect kmod-alx kmod-vmxnet3 kmod-igbvf kmod-iavf kmod-bnx2x kmod-pcnet32 kmod-tulip kmod-r8125 kmod-8139cp kmod-8139too kmod-i40e kmod-drm-i915 kmod-i915-gvt kmod-mlx4-core kmod-mlx5-core fdisk lsblk blkid smartmontools/' target/linux/x86/Makefile
