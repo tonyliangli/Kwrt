@@ -22,6 +22,7 @@ svn export --force  https://github.com/openwrt/packages/trunk/net/xtables-addons
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
+sed -i "s/ +PACKAGE_kmod-backlight:kmod-backlight//" package/kernel/linux/modules/video.mk
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
 echo "
