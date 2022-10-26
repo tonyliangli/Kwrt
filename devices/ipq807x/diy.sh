@@ -21,7 +21,7 @@ svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/target/linu
 
 git clone https://github.com/robimarko/nss-packages --depth 1 package/nss-packages
 
-rm -rf package/network
+rm -rf package/network feeds/kiddin9/{rtl8821cu,rtl88x2bu}
 
 svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/package/network package/network
 
