@@ -24,6 +24,8 @@ sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages;maste
 rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
+rm -rf 
+
 ./scripts/feeds update -a
 rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
 cp -f feeds/kiddin9/my-default-settings/files/etc/nginx/uci.conf.template feeds/packages/net/nginx-util/files/uci.conf.template && cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
@@ -51,10 +53,10 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/kool
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/files-5.4 target/linux/generic/files-5.4
-rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,220-gc_sections*,781-dsa-register*,780-drivers-net*}
+rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,781-dsa-register*,780-drivers-net*,996-fs-ntfs3*}
 ) &
 
+sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk
