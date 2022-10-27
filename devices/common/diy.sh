@@ -29,6 +29,7 @@ rm -rf
 ./scripts/feeds update -a
 rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
 cp -f feeds/kiddin9/my-default-settings/files/etc/nginx/uci.conf.template feeds/packages/net/nginx-util/files/uci.conf.template && cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
+rm -rf feeds/kiddin9/.diy
 ./scripts/feeds install -a -p kiddin9
 ./scripts/feeds install -a
 cd feeds/kiddin9; git pull; cd -
@@ -37,7 +38,7 @@ mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
 sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
 sed -i "35s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 35s/mem.total - mem.available - mem.free/mem.total - mem.free/" package/feeds/kiddin9/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
-sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/diy/patches/status.patch
+sed -i "157s/mem.total \&\& mem.available \&\& mem.free/mem.total \&\& mem.free/; 157s/mem.total - mem.available - mem.free/mem.total - mem.free/" feeds/kiddin9/.diy/patches/status.patch
 sed -i "113s/:/#/" package/feeds/kiddin9/luci-app-bypass/luasrc/controller/bypass.lua
 sed -i "22s/:/#/; 26s/:/#/" package/feeds/kiddin9/luci-app-bypass/root/usr/share/bypass/by-switch
 sed -i "s/(CpuMark/\\\ (CpuMark/" package/feeds/kiddin9/my-default-settings/files/sbin/coremark
