@@ -15,11 +15,11 @@ svn export --force https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr
 
 svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/target/linux/generic target/linux/generic
 rm -rf target/linux/generic/.svn
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
+#svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
 
 svn co https://github.com/robimarko/openwrt/branches/ipq807x-5.15-pr/target/linux/ipq807x target/linux/ipq807x
 
-git clone https://github.com/robimarko/nss-packages --depth 1 package/nss-packages
+#git clone https://github.com/robimarko/nss-packages --depth 1 package/nss-packages
 
 rm -rf package/network feeds/kiddin9/{rtl8821cu,rtl88x2bu}
 
