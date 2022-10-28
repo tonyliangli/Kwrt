@@ -380,7 +380,7 @@ index 8c3ef04e35f4..b043d14bd12f 100644
 +  DEVICE_MODEL := K2P
 +  DEVICE_VARIANT := 32M
 +  SUPPORTED_DEVICES += k2p-32M
-+  DEVICE_PACKAGES := kmod-mt7615d_dbdc
++  DEVICE_PACKAGES := kmod-mt7615e kmod-mt7615-firmware
 +endef
 +TARGET_DEVICES += phicomm_k2p-32m
 +
