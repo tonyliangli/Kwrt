@@ -247,7 +247,7 @@ index 000000000000..90458050554c
 +&spi0 {
 +	status = "okay";
 +
-+	flash@0 {
++	flash: flash@0 {
 +		compatible = "jedec,spi-nor";
 +		reg = <0>;
 +		spi-max-frequency = <50000000>;
