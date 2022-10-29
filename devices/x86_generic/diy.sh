@@ -27,5 +27,7 @@ CONFIG_X86_ACPI_CPUFREQ=y
 CONFIG_NR_CPUS=512
 ' >> ./target/linux/x86/config-5.15
 
+sed -i "s/DEVICE_MODEL := x86/DEVICE_MODEL := x86\/32/" target/linux/x86/image/generic.mk
+
 sed -i "s/enabled '0'/enabled '1'/g" feeds/packages/utils/irqbalance/files/irqbalance.config
 
