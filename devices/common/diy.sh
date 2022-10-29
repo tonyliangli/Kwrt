@@ -24,7 +24,11 @@ sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages;maste
 rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
-rm -rf 
+status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+while [ "$status" == "in_progress" ];do
+	sleep 5
+	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+done
 
 ./scripts/feeds update -a
 rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
@@ -33,7 +37,6 @@ rm -rf feeds/kiddin9/.diy
 ./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
-cd feeds/kiddin9; git pull; cd -
 
 mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
