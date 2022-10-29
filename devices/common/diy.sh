@@ -24,10 +24,10 @@ sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages;maste
 rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
-status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 while [ "$status" == "in_progress" ];do
 	sleep 5
-	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 done
 
 ./scripts/feeds update -a
