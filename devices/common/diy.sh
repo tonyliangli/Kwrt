@@ -55,8 +55,9 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/kool
 (
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
 svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/files-5.4 target/linux/generic/files-5.4
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
-rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,781-dsa-register*,780-drivers-net*,996-fs-ntfs3*}
+rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
 sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
