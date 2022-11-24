@@ -7,7 +7,7 @@
 +  DEVICE_VENDOR := FriendlyARM
 +  DEVICE_MODEL := NanoPi R6S
 +  SOC := rk3328
-+  DEVICE_PACKAGES :=
++  DEVICE_PACKAGES := -luci-app-gpsysupgrade
 +  DEVICE_DTS = rockchip/rk3328-nanopi-r2s
 +endef
 +TARGET_DEVICES += friendlyarm_nanopi-r6s
