@@ -143,8 +143,8 @@
 +	SUBTARGET="$(if $(SUBTARGET),$(SUBTARGET),generic)" \
 +	VERSION_NUMBER="$(VERSION_NUMBER)" \
 +	VERSION_CODE="$(VERSION_CODE)" \
-+	SUPPORTED_DEVICES="$$(SUPPORTED_DEVICES)" \
-+	$(TOPDIR)/scripts/json_add_image_info.py $$@
++	SUPPORTED_DEVICES="$($(PROFILE)_SUPPORTED_DEVICES)" \
++	$(TOPDIR)/scripts/json_add_image_info.py $(BUILD_DIR)/json_info_files/$(ROOTFSTZ).json
    endef
  endif
  
