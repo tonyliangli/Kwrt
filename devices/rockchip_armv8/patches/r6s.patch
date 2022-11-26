@@ -22,7 +22,7 @@
  		ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
  		;;
 +	friendlyarm,nanopi-r6s)
-+		ucidef_set_interfaces_lan_wan "eth0 eth1" "eth2"
++		ucidef_set_interfaces_lan_wan "eth1 eth0" "eth2"
 +		;;
  	*)
  		ucidef_set_interface_lan 'eth0'
