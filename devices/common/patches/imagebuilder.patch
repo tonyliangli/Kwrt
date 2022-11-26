@@ -145,8 +145,8 @@
 +	VERSION_CODE="$(VERSION_CODE)" \
 +	SUPPORTED_DEVICES="$$(SUPPORTED_DEVICES)" \
 +	$(TOPDIR)/scripts/json_add_image_info.py $$@
-+endef
-+
+   endef
+ endif
  
 --- a/scripts/json_overview_image_info.py
 +++ b/scripts/json_overview_image_info.py
