@@ -30,7 +30,6 @@ curl -sfL https://raw.githubusercontent.com/robimarko/openwrt/ipq807x-5.15-pr/in
 
 curl -sfL https://raw.githubusercontent.com/robimarko/openwrt/ipq807x-5.15-pr/package/kernel/linux/modules/netsupport.mk -o package/kernel/linux/modules/netsupport.mk
 
-curl -sfL https://raw.githubusercontent.com/Boos4721/openwrt/master/target/linux/ipq807x/patches-5.15/700-ipq8074-overclock-cpu-2.2ghz.patch -o target/linux/ipq807x/patches-5.15/700-ipq8074-overclock-cpu-2.2ghz.patch
 
 rm -rf package/kernel/mt76
 
