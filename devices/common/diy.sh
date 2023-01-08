@@ -1,12 +1,26 @@
 #!/bin/bash
 #=================================================
 shopt -s extglob
-# kernel_v="$(cat include/kernel-5.10 | grep LINUX_KERNEL_HASH-* | cut -f 2 -d - | cut -f 1 -d ' ')"
-kernel_v="5.4.215"
-echo "KERNEL=${kernel_v}" >> $GITHUB_ENV || true
-sed -i "s?targets/%S/packages?targets/%S/$kernel_v?" include/feeds.mk
+
 # sed -i "9c LINUX_VERSION-5.4 = .179" include/kernel-version.mk
 # sed -i "11c LINUX_KERNEL_HASH-5.4.179 = 2c9bdec0922a95aff34e8d53d2e0ecf7e842033cd908d2959a43d34afb5d897d" include/kernel-version.mk
+
+[ ! -f feeds.conf ] && {
+sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages;master' feeds.conf.default
+}
+
+sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
+
+sed -i '/	refresh_config();/d' scripts/feeds
+
+rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
+
+./scripts/feeds update -a
+rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
+cp -f feeds/kiddin9/my-default-settings/files/etc/nginx/uci.conf.template feeds/packages/net/nginx-util/files/uci.conf.template && cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
+./scripts/feeds update -i
+./scripts/feeds install -a -p kiddin9 -f
+./scripts/feeds install -a
 
 echo "$(date +"%s")" >version.date
 sed -i '/$(curdir)\/compile:/c\$(curdir)/compile: package/opkg/host/compile' package/Makefile
@@ -16,12 +30,6 @@ coremark wget-ssl curl htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr bash opens
 # sed -i "s/procd-ujail//" include/target.mk
 sed -i "1181c \ \ DEPENDS:=@PCI_SUPPORT +kmod-ptp" package/kernel/linux/modules/netdevices.mk
 
-sed -i '/	refresh_config();/d' scripts/feeds
-[ ! -f feeds.conf ] && {
-sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages;master' feeds.conf.default
-}
-
-rm -rf package/{base-files,network/config/firewall,network/services/dnsmasq,network/services/ppp,system/opkg,libs/mbedtls}
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
 status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
@@ -29,13 +37,6 @@ while [ "$status" == "in_progress" ];do
 	sleep 5
 	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 done
-
-./scripts/feeds update -a
-rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
-cp -f feeds/kiddin9/my-default-settings/files/etc/nginx/uci.conf.template feeds/packages/net/nginx-util/files/uci.conf.template && cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
-./scripts/feeds update -i
-./scripts/feeds install -a -p kiddin9 -f
-./scripts/feeds install -a
 
 mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
@@ -64,6 +65,7 @@ sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' 
 sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk
+sed -i 's/$(TARGET_DIR)) install/$(TARGET_DIR)) install --force-overwrite --force-depends/' package/Makefile
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
 sed -i 's/=bbr/=cubic/' package/kernel/linux/files/sysctl-tcp-bbr.conf
 
