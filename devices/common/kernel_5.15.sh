@@ -5,8 +5,8 @@ latest="$(curl -sfL https://github.com/openwrt/openwrt/commits/master/include | 
 latest=""
 mkdir new; cp -rf .git new/.git
 cd new
-[ "$latest" ] && git reset --hard $latest || git reset --hard origin/master
-git checkout HEAD^
+[ "$latest" ] && (git reset --hard $latest  && git checkout HEAD^) || git reset --hard origin/master
+
 [ "$(echo $(git log -1 --pretty=short) | grep "kernel: bump 5.15")" ] && git checkout $latest
 
 cp -rf --parents tools target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} ../
