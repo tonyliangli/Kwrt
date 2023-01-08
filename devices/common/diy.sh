@@ -54,8 +54,8 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/koolproxy/files/x86_64 package/feeds/kiddin9/luci-app-ikoolproxy/koolproxy/files/x86_64; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/koolproxy/files/x86_64
 
 (
-svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+# svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
+# svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/files-5.4 target/linux/generic/files-5.4
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,781-dsa-register*,780-drivers-net*}
@@ -76,7 +76,7 @@ sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/
 
 sed -i '$a CONFIG_ACPI=y\nCONFIG_X86_ACPI_CPUFREQ=y\nCONFIG_NR_CPUS=128\nCONFIG_FAT_DEFAULT_IOCHARSET="utf8"\nCONFIG_CRYPTO_CHACHA20_NEON=y\n \
 CONFIG_CRYPTO_CHACHA20POLY1305=y\nCONFIG_BINFMT_MISC=y' `find target/linux -path "target/linux/*/config-*"`
-sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/2e6d19ee32399e37c7545aefc57d41541a406d55.patch | patch -d './' -p1 --forward" || true
+# sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/2e6d19ee32399e37c7545aefc57d41541a406d55.patch | patch -d './' -p1 --forward" || true
 
 sed -i '$a  \
 CONFIG_CPU_FREQ_GOV_POWERSAVE=y \
