@@ -13,6 +13,7 @@ cp -rf --parents tools target/linux package/kernel package/boot package/firmware
 cd -
 
 curl -sfL https://raw.githubusercontent.com/openwrt/openwrt/master/include/image-commands.mk -o include/image-commands.mk
+sed -i "s/\$(STAGING_DIR_HOST)\/bin\/gzip/gzip/" include/image-commands.mk
 svn export --force https://github.com/openwrt/packages/trunk/kernel feeds/packages/kernel
 svn export --force  https://github.com/openwrt/packages/trunk/net/xtables-addons feeds/packages/net/xtables-addons
 
