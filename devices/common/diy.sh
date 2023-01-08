@@ -55,14 +55,14 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/koolproxy/files/x86_64 package/feeds/kiddin9/luci-app-ikoolproxy/koolproxy/files/x86_64; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/koolproxy/files/x86_64
 
 (
-svn export -r 5682 --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-svn export -r 5682 --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+# svn export -r 5682 --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
+# svn export -r 5682 --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/files-5.4 target/linux/generic/files-5.4
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,781-dsa-register*,780-drivers-net*}
 ) &
 
-sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
+# sed -i 's?zstd$?zstd ucl upx\n$(curdir)/upx/compile := $(curdir)/ucl/compile?g' tools/Makefile
 # sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's/\/cgi-bin\/\(luci\|cgi-\)/\/\1/g' `find package/feeds/kiddin9/luci-*/ -name "*.lua" -or -name "*.htm*" -or -name "*.js"` &
 sed -i 's/Os/O2/g' include/target.mk
