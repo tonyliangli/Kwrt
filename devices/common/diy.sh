@@ -41,7 +41,7 @@ done
 mv -f feeds/kiddin9/{r81*,igb-intel} tmp/
 
 sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
-sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
+# sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
 sed -i "110s/127.0.0.1:/127.0.0.1#/" package/feeds/kiddin9/luci-app-bypass/luasrc/controller/bypass.lua
 sed -i "22s/127.0.0.1:/127.0.0.1#/; 26s/127.0.0.1:/127.0.0.1#/" package/feeds/kiddin9/luci-app-bypass/root/usr/share/bypass/by-switch
 sed -i "s/(CpuMark/\\\ (CpuMark/" package/feeds/kiddin9/my-default-settings/files/sbin/coremark
