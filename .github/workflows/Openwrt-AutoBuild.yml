@@ -256,12 +256,12 @@ jobs:
       run: |
         shopt -s extglob
         mkdir -p firmware/${{matrix.target}}
+        cd openwrt; kernel_v="$(make --file=info.mk kernel_version)"; cd -
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cd openwrt/bin/targets/*/*/
         mv -f profiles.json profiles.json.b
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{matrix.target}}_kernel.config || true
-        kernel_v="$(make --file=$GITHUB_WORKSPACE/openwrt/info.mk kernel_version)"
         mv -f packages $kernel_v
         mkdir packages
         cp -rf kernel_v/Packages* packages/
