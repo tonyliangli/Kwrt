@@ -196,11 +196,9 @@ jobs:
     - name: Apply patches
       run: |
         cd openwrt
-        find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' --no-backup-if-mismatch --merge -p1 -E --forward"
-        #git apply devices/common/patches/*.patch
+        find "devices/common/patches" -type f ! -name 'china_mirrors.patch' -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         if [ -n "$(ls -A "devices/${{matrix.target}}/patches" 2>/dev/null)" ]; then
-          find "devices/${{matrix.target}}/patches" -maxdepth 1 -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' --no-backup-if-mismatch --merge -p1 -E --forward"
-          #git apply devices/${{matrix.target}}/patches/*.patch
+          find "devices/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward"
         fi
         
     - name: Default PPPOE Setting
