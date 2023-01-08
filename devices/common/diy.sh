@@ -54,8 +54,8 @@ svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/root
 svn export --force https://github.com/tonyliangli/luci-app-ikoolproxy/trunk/koolproxy/files/x86_64 package/feeds/kiddin9/luci-app-ikoolproxy/koolproxy/files/x86_64; chmod 755 package/feeds/kiddin9/luci-app-ikoolproxy/koolproxy/files/x86_64
 
 (
-# svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/upx tools/upx
-# svn export --force https://github.com/coolsnowwolf/lede/trunk/tools/ucl tools/ucl
+svn export --force https://github.com/coolsnowwolf/lede/trunk/package/lean/upx tools/upx
+svn export --force https://github.com/coolsnowwolf/lede/trunk/package/lean/ucl tools/ucl
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/files-5.4 target/linux/generic/files-5.4
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.4 target/linux/generic/hack-5.4
 rm -rf target/linux/generic/hack-5.4/{220-arm-gc_sections*,781-dsa-register*,780-drivers-net*}
