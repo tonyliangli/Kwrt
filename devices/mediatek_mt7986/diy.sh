@@ -6,6 +6,8 @@ SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
 rm -rf package/feeds/kiddin9/rtl*
 
+rm -rf package/libs/mbedtls/patches/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch
+
 rm -rf devices/common/patches/{glinet,fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
 rm -rf toolchain/musl
