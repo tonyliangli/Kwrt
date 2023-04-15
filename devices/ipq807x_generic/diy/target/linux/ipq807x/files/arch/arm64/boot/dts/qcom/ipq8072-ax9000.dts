@@ -165,8 +165,9 @@
 	 * printing warnings due to the broken way bootloader adds the
 	 * partitions.
 	 */
-	/delete-node/ partitions;
-	/delete-node/ nand@0;
+	partitions {
+		status = "disabled";
+	};
 
 	nand@0 {
 		reg = <0>;
@@ -175,7 +176,165 @@
 		nand-bus-width = <8>;
 
 		partitions {
-			compatible = "qcom,smem-part";
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			partition@0 {
+				label = "0:sbl1";
+				reg = <0x0 0x100000>;
+				read-only;
+			};
+
+			partition@100000 {
+				label = "0:mibib";
+				reg = <0x100000 0x100000>;
+				read-only;
+			};
+
+			partition@200000 {
+				label = "0:bootconfig";
+				reg = <0x200000 0x80000>;
+				read-only;
+			};
+
+			partition@280000 {
+				label = "0:bootconfig1";
+				reg = <0x280000 0x80000>;
+				read-only;
+			};
+
+			partition@300000 {
+				label = "0:qsee";
+				reg = <0x300000 0x300000>;
+				read-only;
+			};
+
+			partition@600000 {
+				label = "0:qsee_1";
+				reg = <0x600000 0x300000>;
+				read-only;
+			};
+
+			partition@900000 {
+				label = "0:devcfg";
+				reg = <0x900000 0x80000>;
+				read-only;
+			};
+
+			partition@980000 {
+				label = "0:devcfg_1";
+				reg = <0x980000 0x80000>;
+				read-only;
+			};
+
+			partition@a00000 {
+				label = "0:apdp";
+				reg = <0xa00000 0x80000>;
+				read-only;
+			};
+
+			partition@a80000 {
+				label = "0:apdp_1";
+				reg = <0xa80000 0x80000>;
+				read-only;
+			};
+
+			partition@b00000 {
+				label = "0:rpm";
+				reg = <0xb00000 0x80000>;
+				read-only;
+			};
+
+			partition@b80000 {
+				label = "0:rpm_1";
+				reg = <0xb80000 0x80000>;
+				read-only;
+			};
+
+			partition@c00000 {
+				label = "0:cdt";
+				reg = <0xc00000 0x80000>;
+				read-only;
+			};
+
+			partition@c80000 {
+				label = "0:cdt_1";
+				reg = <0xc80000 0x80000>;
+				read-only;
+			};
+
+			partition@d00000 {
+				label = "0:appsblenv";
+				reg = <0xd00000 0x80000>;
+			};
+
+			partition@d80000 {
+				label = "0:appsbl";
+				reg = <0xd80000 0x100000>;
+				read-only;
+			};
+
+			partition@e80000 {
+				label = "0:appsbl_1";
+				reg = <0xe80000 0x100000>;
+				read-only;
+			};
+
+			partition@f80000 {
+				label = "0:art";
+				reg = <0xf80000 0x80000>;
+				read-only;
+
+				compatible = "nvmem-cells";
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				macaddr_dp1: macaddr@0 {
+					reg = <0x0 0x6>;
+				};
+
+				macaddr_dp2: macaddr@6 {
+					reg = <0x6 0x6>;
+				};
+
+				macaddr_dp3: macaddr@c {
+					reg = <0xc 0x6>;
+				};
+
+				macaddr_dp4: macaddr@12 {
+					reg = <0x12 0x6>;
+				};
+
+				macaddr_dp5: macaddr@18 {
+					reg = <0x18 0x6>;
+				};
+
+				caldata_qca9889: caldata@4d000 {
+					reg = <0x4d000 0x844>;
+				};
+			};
+
+			partition@1000000 {
+				label = "bdata";
+				reg = <0x1000000 0x80000>;
+			};
+
+			partition@1080000 {
+				/* This is crash + crash_syslog parts combined */
+				label = "pstore";
+				reg = <0x1080000 0x100000>;
+			};
+
+			partition@1180000 {
+				label = "ubi_kernel";
+				reg = <0x1180000 0x3800000>;
+			};
+
+			partition@4980000 {
+				label = "rootfs";
+				reg = <0x4980000 0xb680000>;
+			};
 		};
 	};
 };
@@ -267,36 +426,6 @@
 	status = "okay";
 };
 
-&dp1 {
-	/delete-property/ nvmem-cells;
-	/delete-property/ nvmem-cell-names;
-};
-
-&dp2 {
-	/delete-property/ nvmem-cells;
-	/delete-property/ nvmem-cell-names;
-};
-
-&dp3 {
-	/delete-property/ nvmem-cells;
-	/delete-property/ nvmem-cell-names;
-};
-
-&dp4 {
-	/delete-property/ nvmem-cells;
-	/delete-property/ nvmem-cell-names;
-};
-
-&dp5 {
-	/delete-property/ nvmem-cells;
-	/delete-property/ nvmem-cell-names;
-};
-
-&wifi1 {
-	/delete-property/ nvmem-cells;
-	/delete-property/ nvmem-cell-names;
-};
-
 &pcie_qmp0 {
 	status = "okay";
 };
@@ -354,4 +483,50 @@
 	status = "okay";
 
 	qcom,ath11k-calibration-variant = "Xiaomi-AX9000";
+};
+
+&qpic_nand {
+	/delete-node/ partitions;
+	/delete-node/ nand@0;
+
+	nand@0 {
+		reg = <0>;
+		nand-ecc-strength = <4>;
+		nand-ecc-step-size = <512>;
+		nand-bus-width = <8>;
+
+		partitions {
+			compatible = "qcom,smem-part";
+		};
+	};
+};
+
+&dp1 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
+};
+
+&dp2 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
+};
+
+&dp3 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
+};
+
+&dp4 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
+};
+
+&dp5 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
+};
+
+&wifi1 {
+	/delete-property/ nvmem-cells;
+	/delete-property/ nvmem-cell-names;
 };
