@@ -12,7 +12,7 @@ cd new
 cp -rf --parents target/linux package/kernel package/boot package/firmware/linux-firmware include/{kernel-*,netfilter.mk} ../
 cd -
 
-sed -i "s/9 -Xe/extreme/" include/image.mk
+#sed -i "s/9 -Xe/extreme/" include/image.mk
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
