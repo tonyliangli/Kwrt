@@ -13,6 +13,7 @@ curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/ker
 
 svn co https://github.com/openwrt/openwrt/trunk/package/kernel/mt76 package/feeds/kiddin9/mt76
 sed -i '/mt7662u_rom_patch.bin/a\\techo mt76-usb disable_usb_sg=1 > $\(1\)\/etc\/modules.d\/mt76-usb' package/feeds/kiddin9/mt76/Makefile
+svn co https://github.com/openwrt/openwrt/trunk/package/network/services/hostapd  package/feeds/kiddin9/hostapd
 
 sed -i "s/ +PACKAGE_kmod-backlight:kmod-backlight//" package/kernel/linux/modules/video.mk
 

@@ -3,7 +3,7 @@
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 bash $SHELL_FOLDER/../common/kernel_5.15.sh
 
-rm -rf package/feeds/kiddin9/hostapd
+
 
 sed -i 's/ factory.img.gz / /' target/linux/bcm27xx/image/Makefile
 
