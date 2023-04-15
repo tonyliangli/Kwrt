@@ -8,7 +8,7 @@ rm -rf package/feeds/kiddin9/rtl*
 
 rm -rf devices/common/patches/{glinet,fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
-rm -rf package/libs/mbedtls/patches/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch
+sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=2023-12-06/" package/network/config/netifd/Makefile
 
 rm -rf toolchain/musl
 
