@@ -66,9 +66,9 @@ sed -i \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
 
-ln -sf /usr/bin/python staging_dir/host/bin/python
+ln -sf /usr/bin/python staging_dir/host/bin/python || true
 
-ln -sf /usr/bin/python3 staging_dir/host/bin/python3
+ln -sf /usr/bin/python3 staging_dir/host/bin/python3 || true
 
 (
 if [ -f sdk.tar.xz ]; then
