@@ -27,7 +27,7 @@ define Image/Build
 	export DATE=$(DATE); \
 	cd /www/wwwroot/op.supes.top/bcache/armvirt/64/amlogic-s9xxx-openwrt; \
 	. ../modify_amlogic.sh; \
-	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024)))
+	./make -k 5.15.100 -b $(MORE) -s $(shell echo $$(($(ROOTFS_PARTSIZE)/1024/1024))) || true
 endef
 
 $(eval $(call BuildImage))
