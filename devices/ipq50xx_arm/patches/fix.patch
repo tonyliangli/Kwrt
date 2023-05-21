@@ -57,3 +57,15 @@
          ],
          stdout=PIPE,
          stderr=PIPE,
+
+--- a/package/kernel/mac80211/ath.mk
++++ b/package/kernel/mac80211/ath.mk
+@@ -304,7 +304,7 @@ define KernelPackage/ath11k
+   TITLE:=Atheros 802.11ax wireless cards support
+   URL:=http://wireless.kernel.org/en/users/Drivers/ath11k
+   DEPENDS+= @TARGET_ipq50xx \
+-	+kmod-ath \
++	+kmod-ath +kmod-hwmon-core \
+ 	+ATH11K_NSS_SUPPORT:kmod-qca-nss-drv-wifi-meshmgr \
+ 	+@DRIVER_11N_SUPPORT +@DRIVER_11AC_SUPPORT +@DRIVER_11AX_SUPPORT
+   FILES:= \

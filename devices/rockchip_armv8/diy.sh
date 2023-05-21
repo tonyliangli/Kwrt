@@ -16,8 +16,7 @@ rm -rf target/linux/rockchip/patches-5.15/{002-net-usb*,003-dt-bindings*,006-roc
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
 svn co https://github.com/openwrt/openwrt/trunk/package/kernel/mt76 package/feeds/kiddin9/mt76
-sed -i '/mt7662u_rom_patch.bin/a\\techo mt76-usb disable_usb_sg=1 > $\(1\)\/etc\/modules.d\/mt76-usb' package/feeds/kiddin9/mt76/Makefile
-svn co https://github.com/openwrt/openwrt/trunk/package/network/services/hostapd  package/feeds/kiddin9/hostapd
+curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/feeds/kiddin9/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
