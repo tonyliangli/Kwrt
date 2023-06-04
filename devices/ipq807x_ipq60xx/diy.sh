@@ -14,6 +14,8 @@ rm -rf package/feeds
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 
+sed -i "/CONFIG_KERNEL_/d" devices/common/.config
+
 echo "
 CONFIG_FEED_gl_feeds_common=n
 CONFIG_FEED_ipq807x=n
@@ -33,6 +35,10 @@ rm -rf package/kernel/exfat
 
 rm -rf devices/common/patches/{glinet,fix.patch,iptables.patch,targets.patch,kernel-defaults.patch,disable_flock.patch}
 
-rm -rf toolchain/musl
+rm -rf toolchain/musl package/utils/e2fsprogs package/libs/libselinux package/feeds/packages/acl  package/feeds/luci/ucode-mod-html package/feeds/luci/rpcd-mod-luci
 
-svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/toolchain/musl toolchain/musl
+svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/toolchain/musl toolchain/musl
+svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/e2fsprogs package/utils/e2fsprogs
+svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/libs/libselinux package/libs/libselinux
+svn co https://github.com/openwrt/openwrt/branches/openwrt-23.05/package/utils/ucode package/utils/ucode
+#ln -sf $(pwd)/feeds/luci/modules/luci-base package/feeds/kiddin9/

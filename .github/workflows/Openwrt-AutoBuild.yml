@@ -103,10 +103,8 @@ jobs:
     - name: Trigger Packages Update
       continue-on-error: true
       run: |
-        gitdate=$(curl -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].created_at')
-        gitdate=$(date -d "$gitdate" +%s)
-        now=$(date -d "$(date)" +%s)
-        if [[ $(expr $gitdate + 300) < $now ]]; then
+        status=$(curl -H "Authorization: token ${{ secrets.REPO_TOKEN }} -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+        if [[ "$status" == "completed" ]]; then
           curl -X POST https://api.github.com/repos/tonyliangli/openwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
@@ -119,7 +117,7 @@ jobs:
       run: |
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install build-essential clang flex g++ gawk gcc-multilib gettext \
-        git libncurses5-dev libssl-dev python3-distutils python3-pyelftools libpython3-dev rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename libelf-dev device-tree-compiler libgnutls28-dev
+        git libncurses5-dev libssl-dev python3-distutils python3-pyelftools libpython3-dev rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename libelf-dev device-tree-compiler libgnutls28-dev coccinelle
         sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android*
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq autoremove --purge
