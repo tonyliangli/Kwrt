@@ -4,10 +4,7 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf feeds/packages/utils/containerd
-svn co https://github.com/openwrt/packages/branches/openwrt-22.03/utils/containerd feeds/packages/utils/containerd
-
-rm -rf package/feeds/kiddin9/rtl*
+rm -rf package/feeds/kiddin9/rtl* package/feeds/packages/gptfdisk package/utils/f2fs-tools
 
 rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 

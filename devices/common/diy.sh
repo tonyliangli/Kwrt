@@ -52,6 +52,15 @@ curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linu
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
 ) &
 
+grep -q "1.8.8" package/network/utils/iptables/Makefile && {
+rm -rf package/network/utils/iptables
+svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/network/utils/iptables package/network/utils/iptables
+}
+
+grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {
+sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a48d0bdb77eb93f7fba6e055dace125c72755b6a.patch | patch -d './' -p1 --forward"
+}
+
 sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's/Os/O2/g' include/target.mk
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
