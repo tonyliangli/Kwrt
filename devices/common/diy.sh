@@ -12,7 +12,7 @@ sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
 sed -i '/	refresh_config();/d' scripts/feeds
 
 ./scripts/feeds update -a
-cp -f feeds/kiddin9/my-default-settings/files/etc/nginx/uci.conf.template feeds/packages/net/nginx-util/files/uci.conf.template && cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
+cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
 ./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
