@@ -24,10 +24,10 @@ diff --git a/package/boot/uboot-envtools/files/ipq807x b/package/boot/uboot-envt
 index 5c5b77089ac..4444021defe 100644
 --- a/package/boot/uboot-envtools/files/ipq807x
 +++ b/package/boot/uboot-envtools/files/ipq807x
-@@ -27,7 +27,8 @@ redmi,ax6|\
- redmi,ax6-stock|\
+@@ -27,7 +27,8 @@ edimax,cax1800)
+ 	;;
+ redmi,ax6|\
  xiaomi,ax3600|\
- xiaomi,ax3600-stock|\
 -xiaomi,ax9000)
 +xiaomi,ax9000|\
 +zte,mf269)
@@ -38,20 +38,20 @@ diff --git a/package/firmware/ipq-wifi/Makefile b/package/firmware/ipq-wifi/Make
 index 32988910c0a..763eeb3a137 100644
 --- a/package/firmware/ipq-wifi/Makefile
 +++ b/package/firmware/ipq-wifi/Makefile
-@@ -49,6 +49,7 @@ ALLWIFIBOARDS:= \
+@@ -38,6 +38,7 @@ ALLWIFIBOARDS:= \
+ 	wallys_dr40x9 \
  	xiaomi_ax3600 \
  	xiaomi_ax9000 \
- 	zte_mf18a \
 +	zte_mf269 \
- 	zte_mf289f
+ 	zyxel_nbg7815
  
  ALLWIFIPACKAGES:=$(foreach BOARD,$(ALLWIFIBOARDS),ipq-wifi-$(BOARD))
-@@ -147,6 +148,7 @@ $(eval $(call generate-ipq-wifi-package,teltonika_rutx,Teltonika RUTX))
+@@ -122,6 +123,7 @@ $(eval $(call generate-ipq-wifi-package,redmi_ax6,Redmi AX6))
+ $(eval $(call generate-ipq-wifi-package,wallys_dr40x9,Wallys DR40X9))
  $(eval $(call generate-ipq-wifi-package,xiaomi_ax3600,Xiaomi AX3600))
  $(eval $(call generate-ipq-wifi-package,xiaomi_ax9000,Xiaomi AX9000))
- $(eval $(call generate-ipq-wifi-package,zte_mf18a,ZTE MF18A))
 +$(eval $(call generate-ipq-wifi-package,zte_mf269,ZTE MF269))
- $(eval $(call generate-ipq-wifi-package,zte_mf289f,ZTE MF289F))
+ $(eval $(call generate-ipq-wifi-package,zyxel_nbg7815,Zyxel NBG7815))
  
  $(foreach PACKAGE,$(ALLWIFIPACKAGES),$(eval $(call BuildPackage,$(PACKAGE))))
 diff --git a/package/firmware/ipq-wifi/board-zte_mf269.ipq8074 b/package/firmware/ipq-wifi/board-zte_mf269.ipq8074
@@ -263,8 +263,8 @@ diff --git a/target/linux/ipq807x/base-files/etc/board.d/02_network b/target/lin
 index 004ab4fdc62..a597aee68f2 100644
 --- a/target/linux/ipq807x/base-files/etc/board.d/02_network
 +++ b/target/linux/ipq807x/base-files/etc/board.d/02_network
-@@ -14,7 +14,8 @@ ipq807x_setup_interfaces()
- 	dynalink,dl-wrx36)
+@@ -16,7 +16,8 @@ ipq807x_setup_interfaces()
+ 	xiaomi,ax9000)
  		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" "wan"
  		;;
 -	edgecore,eap102)
@@ -309,16 +309,14 @@ diff --git a/target/linux/ipq807x/base-files/etc/hotplug.d/firmware/11-ath11k-ca
 index 524211ef43e..61ea555247e 100644
 --- a/target/linux/ipq807x/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
 +++ b/target/linux/ipq807x/base-files/etc/hotplug.d/firmware/11-ath11k-caldata
-@@ -17,7 +17,8 @@ case "$FIRMWARE" in
- 	redmi,ax6-stock|\
+@@ -18,6 +18,7 @@ case "$FIRMWARE" in
+ 	redmi,ax6|\
  	xiaomi,ax3600|\
- 	xiaomi,ax3600-stock|\
--	xiaomi,ax9000)
-+	xiaomi,ax9000|\
-+	zte,mf269)
+ 	xiaomi,ax9000|\
++	zte,mf269|\
+ 	zyxel,nbg7815)
  		caldata_extract "0:art" 0x1000 0x20000
  		;;
- 	esac
 diff --git a/target/linux/ipq807x/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac b/target/linux/ipq807x/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
 new file mode 100644
 index 00000000000..c8a8c6ad2b9
@@ -345,20 +343,20 @@ index 00000000000..c8a8c6ad2b9
 +	;;
 +esac
 diff --git a/target/linux/ipq807x/base-files/lib/upgrade/platform.sh b/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
-index 2662fc717a5..a6c48844d05 100644
+index 346cc390f3124..d9a81e1e22d2b 100644
 --- a/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
 +++ b/target/linux/ipq807x/base-files/lib/upgrade/platform.sh
-@@ -110,6 +110,10 @@ platform_do_upgrade() {
- 		# Reset success flag
- 		fw_setenv flag_boot_success 0
- 
-+		nand_do_upgrade "$1"
-+		;;
-+	zte,mf269)
-+		CI_UBIPART="rootfs"
+@@ -109,6 +109,10 @@ platform_do_upgrade() {
+ 		CI_ROOT_UBIPART="rootfs"
  		nand_do_upgrade "$1"
  		;;
++	zte,mf269)
++		CI_UBIPART="rootfs"
++		nand_do_upgrade "$1"
++		;;
  	*)
+ 		default_do_upgrade "$1"
+ 		;;
 diff --git a/target/linux/ipq807x/files/arch/arm64/boot/dts/qcom/ipq8071-mf269.dts b/target/linux/ipq807x/files/arch/arm64/boot/dts/qcom/ipq8071-mf269.dts
 new file mode 100644
 index 00000000000..be76ddf12e4
@@ -577,11 +575,10 @@ index 00000000000..be76ddf12e4
 +	qcom,ath11k-calibration-variant = "ZTE-MF269";
 +	qcom,ath11k-fw-memory-mode = <1>;
 +};
-diff --git a/target/linux/ipq807x/image/generic.mk b/target/linux/ipq807x/image/generic.mk
-index 6b9eab0e9c6..daad20e63ef 100644
+
 --- a/target/linux/ipq807x/image/generic.mk
 +++ b/target/linux/ipq807x/image/generic.mk
-@@ -133,3 +133,16 @@ ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+@@ -147,6 +147,19 @@
  endif
  endef
  TARGET_DEVICES += xiaomi_ax9000
@@ -598,3 +595,6 @@ index 6b9eab0e9c6..daad20e63ef 100644
 +	DEVICE_PACKAGES := ipq-wifi-zte_mf269
 +endef
 +TARGET_DEVICES += zte_mf269
+ 
+ define Device/zyxel_nbg7815
+ 	$(call Device/FitImage)

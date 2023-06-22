@@ -4,7 +4,7 @@ shopt -s extglob
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/feeds/kiddin9/rtl* feeds/kiddin9/{shortcut-fe,fullconenat-nft} package/kernel/mt76 package/kernel/exfat package/feeds/packages/fuse* package/feeds/luci/ucode-mod-html package/feeds/luci/rpcd-mod-luci
+rm -rf package/feeds/kiddin9/rtl* feeds/kiddin9/{shortcut-fe,fullconenat-nft,dnsmasq} package/kernel/mt76 package/kernel/exfat package/feeds/packages/fuse* package/feeds/luci/ucode-mod-html package/feeds/luci/rpcd-mod-luci
 
 rm -rf devices/common/patches/{fix.patch,iptables.patch,kernel-defaults.patch,targets.patch}
 
