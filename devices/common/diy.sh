@@ -2,10 +2,8 @@
 #=================================================
 shopt -s extglob
 
-[ ! -f feeds.conf ] && {
 sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages.git;master' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
-}
 
 sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
 
@@ -45,14 +43,11 @@ mv package/feeds/kiddin9/my-default-settings/files/sbin/coremark package/feeds/k
 
 (
 svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/backport-5.15 target/linux/generic/backport-5.15
-find target/linux/generic/backport-5.15 -name "[0-9][0-9][0-9]-[a-z][a-z]*" -exec rm -f {} \;
-rm -rf target/linux/generic/backport-5.15/{799-v6.0-net-mii*,802-v6.1-nvmem*,803-v5.19-nvmem*,733-v6.2-02-net-mediatek-sgmii-ensure*,733-v6.2-03-net-mediatek*,733-v6.2-04-mtk_sgmii-enable*,775-v5.16-net-phylink*,776-v5.16-net-ethernet-*}
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
 ) &
 
-grep -q "23.05" include/version.mk && {
+grep -q "23.05" include/version.mk && [ -d package/kernel/mt76 ] && {
 mkdir package/kernel/mt76/patches
 curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch -o package/kernel/mt76/patches/0001-mt76-allow-VHT-rate-on-2.4GHz.patch
 } || rm -rf devices/common/patches/mt7922.patch
@@ -66,6 +61,8 @@ grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {
 sh -c "curl -sfL https://github.com/openwrt/openwrt/commit/a48d0bdb77eb93f7fba6e055dace125c72755b6a.patch | patch -d './' -p1 --forward"
 }
 
+sed -i "/wireless.\${name}.disabled/d" package/kernel/mac80211/files/lib/wifi/mac80211.sh
+
 sed -i "/BuildPackage,miniupnpd-iptables/d" feeds/packages/net/miniupnpd/Makefile
 sed -i 's/Os/O2/g' include/target.mk
 sed -i "/mediaurlbase/d" package/feeds/*/luci-theme*/root/etc/uci-defaults/*
@@ -76,6 +73,7 @@ sed -i 's/max_requests 3/max_requests 20/g' package/network/services/uhttpd/file
 #rm -rf ./feeds/packages/lang/{golang,node}
 sed -i "s/tty\(0\|1\)::askfirst/tty\1::respawn/g" target/linux/*/base-files/etc/inittab
 
+sed -i '/echo "radio_config_id=${radio_md5sum}" >> $hostapd_conf_file/d' package/kernel/mac80211/files/lib/netifd/wireless/mac80211.sh
 
 date=`date +%m.%d.%Y`
 sed -i -e "/\(# \)\?REVISION:=/c\REVISION:=$date" -e '/VERSION_CODE:=/c\VERSION_CODE:=$(REVISION)' include/version.mk

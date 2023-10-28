@@ -12,7 +12,7 @@ on:
   repository_dispatch:
 
 env:
-  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  REPO_TOKEN: ${{ secrets.TOKEN_KIDDIN9 }}
   PPPOE_USERNAME: ${{ secrets.PPPOE_USERNAME }}
   PPPOE_PASSWD: ${{ secrets.PPPOE_PASSWD }}
   SCKEY: ${{ secrets.SCKEY }}
@@ -61,7 +61,7 @@ jobs:
         echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
-        sed -i "1a REPO_TOKEN=${{ secrets.REPO_TOKEN }}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
+        sed -i "1a REPO_TOKEN=${{ secrets.TOKEN_KIDDIN9 }}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
         sed -i "1a TARGET=${{matrix.target}}" ${GITHUB_WORKSPACE}/devices/common/diy.sh
         if [ ${{matrix.target}} == "x86_64" ]; then
             echo "ARCH=linux/amd64" >> $GITHUB_ENV
@@ -69,7 +69,7 @@ jobs:
         elif [ ${{matrix.target}} == "x86_generic" ]; then
             echo "ARCH=linux/amd32" >> $GITHUB_ENV
             echo "MTARGET=x86_generic" >> $GITHUB_ENV
-        elif [[ ${{matrix.target}} =~ (armvirt_64|ipq807x_generic|mediatek_mt7622|mediatek_mt7981|mediatek_gl_mt7981|mediatek_filogic|bcm27xx_bcm2710|ipq60xx_generic|ipq807x_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
+        elif [[ ${{matrix.target}} =~ (armsr_armv8|ipq807x_generic|mediatek_mt7622|mediatek_mt7981|mediatek_filogic|bcm27xx_bcm2710|qualcommax_ipq60xx|bcm4908_generic|sunxi_cortexa53) ]]; then
             echo "MTARGET=aarch64_cortex-a53" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (ramips_mt7621|ramips_mt7620|ramips_mt76x8) ]]; then
             echo "MTARGET=mipsel_24kc" >> $GITHUB_ENV
@@ -95,7 +95,7 @@ jobs:
           echo "ARCH=linux/arm64" >> $GITHUB_ENV
           if [[ ${{matrix.target}} == "bcm27xx_bcm2711" ]]; then
             echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
-          elif [[ ${{matrix.target}} == "rockchip_armv8" || ${{matrix.target}} == "rockchip_rk3588_armv8" ]]; then
+          elif [[ ${{matrix.target}} == rockchip* ]]; then
             echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
           fi
         fi
@@ -103,11 +103,11 @@ jobs:
     - name: Trigger Packages Update
       continue-on-error: true
       run: |
-        status=$(curl -H "Authorization: token ${{ secrets.REPO_TOKEN }} -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+        status=$(curl -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }} -s "https://api.github.com/repos/tonyliangli/openwrt-packages/actions/runs" | jq -r '.workflow_runs[0].status')
         if [[ "$status" == "completed" ]]; then
           curl -X POST https://api.github.com/repos/tonyliangli/openwrt-packages/dispatches \
             -H "Accept: application/vnd.github.everest-preview+json" \
-            -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.TOKEN_KIDDIN9 }}" \
           --data '{"event_type": "update"}'
         fi
 
@@ -117,7 +117,9 @@ jobs:
       run: |
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install build-essential clang flex g++ gawk gcc-multilib gettext \
-        git libncurses5-dev libssl-dev python3-distutils python3-pyelftools python3-setuptools libpython3-dev rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename libelf-dev device-tree-compiler libgnutls28-dev coccinelle
+        git libncurses5-dev libssl-dev python3-distutils python3-pyelftools python3-setuptools \
+        libpython3-dev rsync unzip zlib1g-dev swig aria2 jq subversion qemu-utils ccache rename \
+        libelf-dev device-tree-compiler libgnutls28-dev coccinelle libgmp3-dev libmpc-dev
         sudo -E apt-get -qq purge azure-cli ghc* zulu* llvm* firefox powershell openjdk* dotnet* google* mysql* php* android*
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq autoremove --purge
@@ -125,7 +127,7 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
-    
+
     - name: Get current date
       id: date
       run: |
@@ -136,23 +138,12 @@ jobs:
 
     - name: Clone source code
       run: |
-        if [ "${{matrix.target}}" == "ipq807x_ipq60xx" ]; then
-            git clone https://github.com/gl-inet/gl-infra-builder.git
-            cd gl-infra-builder
-            python3 setup.py -c configs/config-wlan-ap.yml
-            ln -sf gl-infra-builder/wlan-ap/openwrt ../openwrt
-            cd -
-        elif [ "${{matrix.target}}" == "mediatek_gl_mt7981" ]; then
-            git clone https://github.com/gl-inet/gl-infra-builder.git
-            cd gl-infra-builder
-            python3 setup.py -c configs/config-mt798x-7.6.6.1.yml
-            ln -sf gl-infra-builder/mt7981 ../openwrt
-            cd -
-        elif [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
-          REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
-           -H "Authorization: Bearer ${{ secrets.REPO_TOKEN }}" \
+        REPO_BRANCH="$((curl -gs -H 'Content-Type: application/json' \
+           -H "Authorization: Bearer ${{ secrets.TOKEN_KIDDIN9 }}" \
            -X POST -d '{ "query": "query {repository(owner: \"openwrt\", name: \"openwrt\") {refs(refPrefix: \"refs/tags/\", last: 4, orderBy: {field: TAG_COMMIT_DATE, direction: ASC}) {edges {node {name}}}}}"}' https://api.github.com/graphql) | jq -r '.data.repository.refs.edges[].node.name' | grep v23 | tail -n 1)"
-           git clone $REPO_URL -b $REPO_BRANCH openwrt
+        echo "CONFIG_VERSION_REPO=\"https://dl.openwrt.ai/`echo $REPO_BRANCH  | cut -d . -f 1,2 | sed -e 's/^v//'`\"">>devices/common/.config
+        if [[ ! "${{ env.REPO_BRANCH }}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
+            git clone $REPO_URL -b $REPO_BRANCH openwrt
         elif [[ ! "${{ env.REPO_BRANCH }}" ]]; then
             git clone $REPO_URL openwrt
         else
@@ -175,22 +166,18 @@ jobs:
         cp -rf devices/${{matrix.target}}/. openwrt/
         cp -rf devices openwrt/
         cd openwrt
+        cp -Rf ./diy/* ./ || true
         chmod +x devices/common/$DIY_SH
         /bin/bash "devices/common/$DIY_SH"
-        if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
-          chmod +x devices/${{matrix.target}}/$DIY_SH
-          echo "/bin/bash devices/${{matrix.target}}/$DIY_SH"
-          /bin/bash "devices/${{matrix.target}}/$DIY_SH"
-        fi
-        cp -Rf ./diy/* ./ || true
-        if [ -f "devices/${{matrix.target}}/default-settings" ]; then
-          echo >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
-          cat devices/${{matrix.target}}/default-settings >> package/*/*/my-default-settings/files/etc/uci-defaults/99-default-settings
-        fi
         cp -f devices/common/$CONFIG_FILE .config
         if [ -f "devices/${{matrix.target}}/$CONFIG_FILE" ]; then
           echo >> .config
           cat devices/${{matrix.target}}/$CONFIG_FILE >> .config
+        fi
+        if [ -f "devices/${{matrix.target}}/$DIY_SH" ]; then
+          chmod +x devices/${{matrix.target}}/$DIY_SH
+          echo "/bin/bash devices/${{matrix.target}}/$DIY_SH"
+          /bin/bash "devices/${{matrix.target}}/$DIY_SH"
         fi
 
     - name: Apply patches
@@ -214,18 +201,16 @@ jobs:
         CONFIG_CRYPTO_CHACHA20POLY1305=y \
         CONFIG_FAT_DEFAULT_IOCHARSET="utf8" \
         ' `find target/linux -path "target/linux/*/config-*"`
-        
-    - name: Default PPPOE Setting
-      if: env.PPPOE_USERNAME && env.PPPOE_PASSWD
-      run: |
-        sed -i '$i uci set network.wan.username=${{ env.PPPOE_USERNAME }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
-        sed -i '$i uci set network.wan.password=${{ env.PPPOE_PASSWD }}' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
-        sed -i '$i uci commit network' openwrt/package/*/*/my-default-settings/files/etc/uci-defaults/95-default-settings
 
     - name: Defconfig
       run: |
         cd openwrt
         make defconfig
+        if [[ ! "${{matrix.target}}" =~ (armsr_armv8|bcm27xx_*|rockchip_*|sunxi_*|x86_*|meson_meson8b) ]]; then
+        sed -n '/# Wireless Drivers/,/# end of Wireless Drivers/p' .config | sed -e 's/=m/=n/' >>.config
+        sed -i "s/\(kmod-qca.*\)=m/\1=n/" .config
+        make defconfig
+        fi
         cat .config
 
     - name: Download package
@@ -276,12 +261,9 @@ jobs:
         cd openwrt; kernel_v="$(make --file=info.mk kernel_version)"; cd -
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cd openwrt/bin/targets/*/*/
-        tar -cf targets.tar .*
         mv -f profiles.json profiles.json.b || true
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{matrix.target}}_kernel.config || true
-        mv -f packages $kernel_v
-        ln -sf $kernel_v packages
         cd -
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
@@ -309,12 +291,11 @@ jobs:
 
     - name: Upload firmware for artifact
       uses: actions/upload-artifact@main
-      continue-on-error: true
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
         path: |
-          openwrt/bin/targets/*/*/targets.tar
+          openwrt/bin/targets/
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
@@ -352,7 +333,7 @@ jobs:
       continue-on-error: true
       if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN_KIDDIN9 }}
       with:
         files: "${{ env.FIRMWARE }}/*"
         name: ${{ env.date2 }} ${{matrix.target}} ${{ env.EMOJI }}
@@ -410,4 +391,4 @@ jobs:
         keep_latest: 15
         delete_tags: true
       env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN_KIDDIN9 }}
