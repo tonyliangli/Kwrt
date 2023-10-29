@@ -265,17 +265,16 @@ jobs:
         cd openwrt; kernel_v="$(make --file=info.mk kernel_version)"; cd -
         cp -rf openwrt/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{matrix.target}}/ || true
         cd openwrt/bin/targets/*/*/
-        tar -cf targets.tar .*
         mv -f profiles.json profiles.json.b || true
         cp $GITHUB_WORKSPACE/openwrt/.config ${{matrix.target}}.config || true
         cp $GITHUB_WORKSPACE/openwrt/build_dir/target-*/linux-*/linux-*/.config ${{matrix.target}}_kernel.config || true
-        mv -f packages $kernel_v
-        ln -sf $kernel_v packages
         cd -
         rename -v "s/openwrt-/${{ env.VERSION }}-openwrt-/" ./firmware/*/* || true
         rename -v "s/friendlyarm_//" ./firmware/*/*gz || true
         rename -v "s/embedfire_//" ./firmware/*/*gz || true
         rename -v "s/xiaomi_redmi-router/redmi/" ./firmware/*/*bin || true
+        mkdir ${{ env.REPO_BRANCH }}
+        cp -rf openwrt/bin/{targets,packages} ${{ env.REPO_BRANCH }}/
         Emoji=("🎉" "🤞" "✨" "🎁" "🎈" "🎄" "🎨" "💋" "🍓" "🍕" "🍉" "💐" "🌴" "🚀" "🛸" "🗽" "⛅" "🌈" "🔥" "⛄" "🐶" "🏅" "🦄" "🐤")
         echo "EMOJI=${Emoji[$[$RANDOM % ${#Emoji[@]}]]}" >> $GITHUB_ENV
         if [ ${{matrix.target}} == "x86_64" ]; then
