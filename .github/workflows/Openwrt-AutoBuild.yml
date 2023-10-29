@@ -301,7 +301,9 @@ jobs:
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
         path: |
-          openwrt/bin/targets/
+          ./firmware/
+          ${{ env.REPO_BRANCH }}
+          openwrt/bin/packages/*/base/*-firmware*
 
     - name: Upload firmware to cowtransfer
       if: env.UPLOAD_FIRMWARE_TO_COWTRANSFER == 'true'
