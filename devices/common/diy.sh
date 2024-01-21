@@ -2,6 +2,21 @@
 #=================================================
 shopt -s extglob
 
+function git_clone_path() {
+          branch="$1" rurl="$2" localdir="gitemp" && shift 2
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          if [ "$?" != 0 ]; then
+            echo "error on $rurl"
+            return 0
+          fi
+          cd $localdir
+          git sparse-checkout init --cone
+          git sparse-checkout set $@
+		  mv -n $@/* ../$@/ || cp -rf $@ ../$(dirname "$@")/
+          cd ..
+		  rm -rf gitemp
+          }
+
 sed -i '$a src-git kiddin9 https://github.com/tonyliangli/openwrt-packages.git;master' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
@@ -41,11 +56,11 @@ sed -i "s/192.168.1/10.10.10/" package/base-files/files/bin/config_generate
 sed -i "s/(CpuMark/\\\ (CpuMark/" package/feeds/kiddin9/my-default-settings/files/sbin/coremark
 mv package/feeds/kiddin9/my-default-settings/files/sbin/coremark package/feeds/kiddin9/my-default-settings/files/sbin/cpumark
 
-(
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic/hack-5.15 target/linux/generic/hack-5.15
+#sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
+
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-5.15
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-5.15/613-netfilter_optional_tcp_window_check.patch
 sed -i "s/CONFIG_WERROR=y/CONFIG_WERROR=n/" target/linux/generic/config-5.15
-) &
 
 grep -q "23.05" include/version.mk && [ -d package/kernel/mt76 ] && {
 mkdir package/kernel/mt76/patches
@@ -54,7 +69,7 @@ curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/packa
 
 grep -q "1.8.8" package/network/utils/iptables/Makefile && {
 rm -rf package/network/utils/iptables
-svn co https://github.com/openwrt/openwrt/branches/openwrt-22.03/package/network/utils/iptables package/network/utils/iptables
+git_clone_path openwrt-22.03 https://github.com/openwrt/openwrt package/network/utils/iptables
 }
 
 grep -q 'PKG_RELEASE:=9' package/libs/openssl/Makefile && {

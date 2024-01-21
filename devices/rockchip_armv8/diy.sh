@@ -2,15 +2,32 @@
 
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
+function git_clone_path() {
+          branch="$1" rurl="$2" localdir="gitemp" && shift 2
+          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
+          if [ "$?" != 0 ]; then
+            echo "error on $rurl"
+            return 0
+          fi
+          cd $localdir
+          git sparse-checkout init --cone
+          git sparse-checkout set $@
+          mv -n $@/* ../$@/ || cp -rf $@ ../$(dirname "$@")/
+		  cd ..
+		  rm -rf gitemp
+          }
+
+rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools package/feeds/packages/v4l2loopback package/feeds/routing/batman-adv
 
 rm -rf package/boot/uboot-rockchip
-svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/uboot-rockchip package/boot/uboot-rockchip
-svn export --force https://github.com/coolsnowwolf/lede/trunk/package/boot/arm-trusted-firmware-rockchip-vendor package/boot/arm-trusted-firmware-rockchip-vendor
+
+git_clone_path master https://github.com/coolsnowwolf/lede package/boot/uboot-rockchip
+git_clone_path master https://github.com/coolsnowwolf/lede package/boot/arm-trusted-firmware-rockchip-vendor
 
 rm -rf target/linux/generic target/linux/rockchip/!(Makefile)
 
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/generic target/linux/generic
-svn co https://github.com/coolsnowwolf/lede/trunk/target/linux/rockchip target/linux/rockchip
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip
 
 curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-5.15 -o include/kernel-5.15
 
@@ -27,6 +44,8 @@ sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/' target/linux/rockchip/Makefile
 
 sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
+
+cp -Rf $SHELL_FOLDER/diy/* ./
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y
