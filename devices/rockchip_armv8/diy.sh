@@ -2,36 +2,23 @@
 
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
-function git_clone_path() {
-          branch="$1" rurl="$2" localdir="gitemp" && shift 2
-          git clone -b $branch --depth 1 --filter=blob:none --sparse $rurl $localdir
-          if [ "$?" != 0 ]; then
-            echo "error on $rurl"
-            return 0
-          fi
-          cd $localdir
-          git sparse-checkout init --cone
-          git sparse-checkout set $@
-          mv -n $@/* ../$@/ || cp -rf $@ ../$(dirname "$@")/
-		  cd ..
-		  rm -rf gitemp
-          }
 
-rm -rf package/devel/kselftests-bpf package/network/utils/xdp-tools package/feeds/packages/v4l2loopback package/feeds/routing/batman-adv
+rm -rf package/boot
 
-rm -rf package/boot/uboot-rockchip
-
-git_clone_path master https://github.com/coolsnowwolf/lede package/boot/uboot-rockchip
-git_clone_path master https://github.com/coolsnowwolf/lede package/boot/arm-trusted-firmware-rockchip-vendor
+git_clone_path master https://github.com/immortalwrt/immortalwrt package/boot
 
 rm -rf target/linux/generic target/linux/rockchip/!(Makefile)
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/rockchip
+git_clone_path master https://github.com/immortalwrt/immortalwrt target/linux/generic
+git_clone_path master https://github.com/immortalwrt/immortalwrt target/linux/rockchip
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/include/kernel-5.15 -o include/kernel-5.15
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.1
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch
+
+rm -rf package/feeds/kiddin9/{quectel_Gobinet} package/feeds/packages/libpfring devices/common/patches/kernel_version.patch devices/common/patches/rootfstargz.patch target/linux/generic/hack-6.1/{410-block-fit-partition-parser.patch,724-net-phy-aquantia*,720-net-phy-add-aqr-phys.patch}
+
+curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
@@ -40,13 +27,15 @@ mv -f tmp/r8125 feeds/kiddin9/
 rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
+sed -i -e 's,wpad-openssl,wpad-basic-mbedtls,g' target/linux/rockchip/image/armv8.mk
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/' target/linux/rockchip/Makefile
 
-sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
-
 cp -Rf $SHELL_FOLDER/diy/* ./
+
+sed -i 's/Ariaboard/光影猫/' target/linux/rockchip/image/armv8.mk
+sed -i 's,NanoPi R2S$,NanoPi R2S / R2S Plus,' target/linux/rockchip/image/armv8.mk
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-5.15
+' >> ./target/linux/rockchip/armv8/config-6.1
