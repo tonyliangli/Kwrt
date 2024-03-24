@@ -11,6 +11,7 @@ sed -i '/	refresh_config();/d' scripts/feeds
 
 ./scripts/feeds update -a
 cd feeds/packages; rm -rf lang/golang; git_clone_path master https://github.com/openwrt/packages lang/golang; cd ../..
+cd feeds/packages; rm -rf libs/libpfring; git_clone_path master https://github.com/openwrt/packages libs/libpfring; cd ../..
 cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
 ./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
@@ -84,8 +85,6 @@ sed -i \
 	-e 's/+python\( \|$\)/+python3/' \
 	-e 's?../../lang?$(TOPDIR)/feeds/packages/lang?' \
 	package/feeds/kiddin9/*/Makefile
-
-rm -rf package/network/utils/xdp-tools package/feeds/packages/v4l2loopback
 
 (
 if [ -f sdk.tar.xz ]; then
