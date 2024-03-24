@@ -10,7 +10,7 @@ sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
 sed -i '/	refresh_config();/d' scripts/feeds
 
 ./scripts/feeds update -a
-rm -rf feeds/packages/lang/golang; svn export https://github.com/openwrt/packages/trunk/lang/golang feeds/packages/lang/golang
+cd feeds/packages; rm -rf lang/golang; git_clone_path https://github.com/openwrt/packages lang/golang; cd ../..
 cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
 ./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
