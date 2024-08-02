@@ -13,6 +13,7 @@ sed -i '/	refresh_config();/d' scripts/feeds
 # cd feeds/packages; rm -rf lang/golang; git_clone_path master https://github.com/openwrt/packages lang/golang; cd ../..
 # cd feeds/packages; rm -rf libs/libpfring; git_clone_path master https://github.com/openwrt/packages libs/libpfring; cd ../..
 cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
+sed -i "9a\\" feeds/kiddin9/adguardhome/patches/version.patch
 ./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
