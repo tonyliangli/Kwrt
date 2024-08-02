@@ -1,31 +1,14 @@
 --- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
 +++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-@@ -41,7 +41,7 @@ mediatek_setup_interfaces()
- 	bananapi,bpi-r4)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 eth1" "wan eth2"
+@@ -12,7 +12,7 @@ mediatek_setup_interfaces()
+ 		ucidef_set_interface_lan "eth0" "dhcp"
  		;;
+ 	abt,asr3000|\
 -	cmcc,rax3000m|\
 +	cmcc,rax3000m*|\
  	h3c,magic-nx30-pro|\
+ 	nokia,ea0326gmp|\
  	zbtlink,zbt-z8103ax)
- 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
-
---- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-+++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
-@@ -57,6 +57,13 @@ case "$board" in
- 		esac
- 		[ "$PHYNBR" = "1" ] && echo "$addr" > /sys${DEVPATH}/macaddress
- 		;;
-+	cmcc,rax3000m-emmc)
-+		[ "$PHYNBR" = "1" ] && mmc_get_mac_binary factory 0xa > /sys${DEVPATH}/macaddress
-+		;;
-+	cmcc,a10|\
-+	cmcc,rax3000m-nand)
-+		[ "$PHYNBR" = "1" ] && mtd_get_mac_binary Factory 0xa > /sys${DEVPATH}/macaddress
-+		;;
- 	cudy,wr3000-v1)
- 		addr=$(mtd_get_mac_binary bdinfo 0xde00)
- 		# Originally, phy0 is phy1 mac with LA bit set. However, this would conflict
 
 --- a/target/linux/mediatek/image/filogic.mk
 +++ b/target/linux/mediatek/image/filogic.mk
@@ -40,7 +23,7 @@
 +  DEVICE_MODEL := RAX3000M NAND
 +  DEVICE_DTS := mt7981b-cmcc-rax3000m-nand
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
 +	e2fsprogs f2fsck mkf2fs
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k
@@ -58,7 +41,7 @@
 +  DEVICE_MODEL := RAX3000M eMMC
 +  DEVICE_DTS := mt7981b-cmcc-rax3000m-emmc
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
 +	e2fsprogs f2fsck mkf2fs losetup kmod-fs-f2fs kmod-mmc
 +  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
 +  KERNEL_INITRAMFS := kernel-bin | lzma | \

@@ -270,6 +270,19 @@ index 53e7b024e40fb..61637e09c7f0e 100644
  	confiabits,mt7981|\
  	cudy,wr3000-v1|\
  	tenbay,wr3000k|\
+
+--- a/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
++++ b/target/linux/mediatek/filogic/base-files/etc/hotplug.d/ieee80211/11_fix_wifi_mac
+@@ -65,6 +65,9 @@ case "$board" in
+ 		esac
+ 		[ "$PHYNBR" = "1" ] && echo "$addr" > /sys${DEVPATH}/macaddress
+ 		;;
++	cmcc,a10)
++		[ "$PHYNBR" = "1" ] && mtd_get_mac_binary Factory 0xa > /sys${DEVPATH}/macaddress
++		;;
+ 	comfast,cf-e393ax)
+ 		addr=$(mtd_get_mac_binary "Factory" 0x8000)
+ 		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
 diff --git a/target/linux/mediatek/image/filogic.mk b/target/linux/mediatek/image/filogic.mk
 index 6976a399e86dc..83428f0d981e7 100644
 --- a/target/linux/mediatek/image/filogic.mk
@@ -283,7 +296,7 @@ index 6976a399e86dc..83428f0d981e7 100644
 +  DEVICE_MODEL := A10
 +  DEVICE_DTS := mt7981b-cmcc-a10
 +  DEVICE_DTS_DIR := ../dts
-+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
++  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 +  UBINIZE_OPTS := -E 5
 +  BLOCKSIZE := 128k
 +  PAGESIZE := 2048

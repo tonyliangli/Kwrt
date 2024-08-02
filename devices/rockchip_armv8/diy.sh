@@ -3,31 +3,33 @@
 shopt -s extglob
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-rm -rf package/boot
+bash $SHELL_FOLDER/../common/kernel_6.6.sh
 
-git_clone_path master https://github.com/immortalwrt/immortalwrt package/boot
+rm -rf package/boot package/devel/perf
 
-rm -rf target/linux/generic target/linux/rockchip/!(Makefile)
+rm -rf target/linux/generic/!(*-5.15) target/linux/rockchip
 
-git_clone_path master https://github.com/immortalwrt/immortalwrt target/linux/generic
-git_clone_path master https://github.com/immortalwrt/immortalwrt target/linux/rockchip
+git_clone_path master https://github.com/immortalwrt/immortalwrt package/boot target/linux/rockchip
+git_clone_path master https://github.com/immortalwrt/immortalwrt mv target/linux/generic
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.1
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/generic/hack-6.6
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch -o target/linux/generic/pending-6.1/613-netfilter_optional_tcp_window_check.patch
+wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/generic/pending-6.6/613-netfilter_optional_tcp_window_check.patch -P target/linux/generic/pending-6.6/
 
-rm -rf package/feeds/kiddin9/{quectel_Gobinet} package/feeds/packages/libpfring devices/common/patches/kernel_version.patch devices/common/patches/rootfstargz.patch target/linux/generic/hack-6.1/{410-block-fit-partition-parser.patch,724-net-phy-aquantia*,720-net-phy-add-aqr-phys.patch}
+wget -N https://github.com/immortalwrt/immortalwrt/raw/master/include/kernel-6.6 -P include/
 
-curl -sfL https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
+rm -rf target/linux/generic/hack-6.6/{410-block-fit-partition-parser.patch,724-net-phy-aquantia*,720-net-phy-add-aqr-phys.patch} package/network/utils/xdp-tools
 
 sed -i "/KernelPackage,ptp/d" package/kernel/linux/modules/other.mk
 
 mv -f tmp/r8125 feeds/kiddin9/
 
-rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update
+rm -rf target/linux/rockchip/armv8/base-files/etc/uci-defaults/13_opkg_update package/feeds/kiddin9/pcat-manager
 
 sed -i -e 's,kmod-r8168,kmod-r8169,g' target/linux/rockchip/image/armv8.mk
 sed -i -e 's,wpad-openssl,wpad-basic-mbedtls,g' target/linux/rockchip/image/armv8.mk
+
+wget -N https://raw.githubusercontent.com/immortalwrt/immortalwrt/master/package/kernel/linux/modules/video.mk -P package/kernel/linux/modules/
 
 sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += fdisk lsblk kmod-drm-rockchip/' target/linux/rockchip/Makefile
 
@@ -38,4 +40,4 @@ sed -i 's,NanoPi R2S$,NanoPi R2S / R2S Plus,' target/linux/rockchip/image/armv8.
 
 echo '
 CONFIG_SENSORS_PWM_FAN=y
-' >> ./target/linux/rockchip/armv8/config-6.1
+' >> ./target/linux/rockchip/armv8/config-6.6

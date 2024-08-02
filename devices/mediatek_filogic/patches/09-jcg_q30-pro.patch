@@ -14,7 +14,7 @@
 -        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
 -  IMAGE/sysupgrade.itb := append-kernel | \
 -        fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
-   DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+   DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
 -  ARTIFACTS := preloader.bin bl31-uboot.fip
 -  ARTIFACT/preloader.bin := mt7981-bl2 spim-nand-ddr3
 -  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot jcg_q30-pro
@@ -27,7 +27,7 @@
 
 --- a/target/linux/mediatek/dts/mt7981b-jcg-q30-pro.dts
 +++ b/target/linux/mediatek/dts/mt7981b-jcg-q30-pro.dts
-@@ -98,6 +98,10 @@
+@@ -101,6 +101,10 @@
  		spi-tx-bus-width = <4>;
  		spi-rx-bus-width = <4>;
  
@@ -38,3 +38,17 @@
  		partitions {
  			compatible = "fixed-partitions";
  			#address-cells = <1>;
+@@ -140,12 +144,11 @@
+ 			partition@380000 {
+ 				label = "fip";
+ 				reg = <0x0380000 0x0200000>;
+-				read-only;
+ 			};
+ 
+ 			partition@580000 {
+ 				label = "ubi";
+-				reg = <0x0580000 0x7000000>;
++				reg = <0x0580000 0x6e80000>;
+ 			};
+ 		};
+ 	};

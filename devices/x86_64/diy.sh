@@ -2,18 +2,20 @@
 
 SHELL_FOLDER=$(dirname $(readlink -f "$0"))
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/files
+#bash $SHELL_FOLDER/../common/kernel_6.1.sh
 
-git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/patches-5.15
+git_clone_path master https://github.com/coolsnowwolf/lede target/linux/x86/files target/linux/x86/patches-5.15
 
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/package/kernel/linux/modules/video.mk -o package/kernel/linux/modules/video.mk
-curl -sfL https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/base-files/etc/board.d/02_network -o target/linux/x86/base-files/etc/board.d/02_network
+wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/base-files/etc/board.d/02_network -P target/linux/x86/base-files/etc/board.d/
 
-sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += kmod-usb-hid kmod-mmc kmod-sdhci usbutils pciutils lm-sensors-detect kmod-alx kmod-vmxnet3 kmod-igbvf kmod-iavf kmod-bnx2x kmod-pcnet32 kmod-tulip kmod-r8125 kmod-8139cp kmod-8139too kmod-i40e kmod-drm-i915 kmod-drm-amdgpu kmod-mlx4-core kmod-mlx5-core fdisk lsblk kmod-phy-broadcom blkid smartmontools/' target/linux/x86/Makefile
+wget -N https://raw.githubusercontent.com/coolsnowwolf/lede/master/target/linux/x86/64/config-5.15 -P target/linux/x86/64/
 
+sed -i 's/kmod-r8169/kmod-r8168/' target/linux/x86/image/64.mk
+
+sed -i 's/DEFAULT_PACKAGES +=/DEFAULT_PACKAGES += kmod-usb-hid kmod-mmc kmod-sdhci usbutils pciutils lm-sensors-detect kmod-alx kmod-vmxnet3 kmod-igbvf kmod-iavf kmod-bnx2x kmod-pcnet32 kmod-tulip kmod-r8101 kmod-r8125 kmod-8139cp kmod-8139too kmod-i40e kmod-drm-i915 kmod-drm-amdgpu kmod-mlx4-core kmod-mlx5-core fdisk lsblk kmod-phy-broadcom blkid smartmontools/' target/linux/x86/Makefile
 
 mv -f tmp/r81* feeds/kiddin9/
-sed -i 's,kmod-r8169,kmod-r8168,g' target/linux/x86/image/64.mk
+
 sed -i 's/256/1024/g' target/linux/x86/image/Makefile
 
 echo '
