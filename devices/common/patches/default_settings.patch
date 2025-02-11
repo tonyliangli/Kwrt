@@ -1,6 +1,6 @@
 --- a/package/feeds/kiddin9/my-default-settings/files/etc/uci-defaults/99-default-settings
 +++ b/package/feeds/kiddin9/my-default-settings/files/etc/uci-defaults/99-default-settings
-@@ -224,7 +224,7 @@ if [[ ! "$version" || "$version" -lt 1 ]
+@@ -166,7 +166,7 @@ if [[ ! "$version" || "$version" -lt 1 ]
  if [ -n "$(command -v nginx)" ]; then
  	uci add wizard shortcuts
  	uci set wizard.@shortcuts[-1].shortcut='pw'
@@ -9,7 +9,7 @@
  	uci set wizard.@shortcuts[-1].comments='passwall'
  	uci commit wizard
  
-@@ -232,11 +232,11 @@ if [ -n "$(command -v nginx)" ]; then
+@@ -173,11 +173,11 @@ if [ -n "$(command -v nginx)" ]; then
  	uci -q set nginx._sc_pw.server_name="pw"
  	uci -q add_list nginx._sc_pw.listen="80"
  	uci -q add_list nginx._sc_pw.listen="443"
@@ -23,7 +23,7 @@
  	uci -q set dhcp._sc_pw.comments="PassWall"
  	uci commit dhcp
  fi
-@@ -254,7 +254,7 @@ fi
+@@ -198,7 +198,7 @@ fi
  if [ -z "`uci -q get dhcp.default_server`" ]; then
  	uci -q set dhcp.default_server=domain
  	uci -q set dhcp.default_server.name='op'
