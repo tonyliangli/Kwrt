@@ -5,7 +5,7 @@
  		fs.exec('/sbin/firstboot', [ '-r', '-y' ]);
  
 -		ui.awaitReconnect('192.168.1.1', 'openwrt.lan');
-+		ui.awaitReconnect('10.0.0.1', 'kwrt.lan');
++		ui.awaitReconnect('10.10.10.2', 'kwrt.lan');
  	},
  
  	handleRestore: function(ev) {
@@ -14,7 +14,7 @@
  				]);
  
 -				ui.awaitReconnect(window.location.host, '192.168.1.1', 'openwrt.lan');
-+				ui.awaitReconnect(window.location.host, '10.0.0.1', 'kwrt.lan');
++				ui.awaitReconnect(window.location.host, '10.10.10.2', 'kwrt.lan');
  			}, this))
  			.catch(function(e) { ui.addNotification(null, E('p', e.message)) })
  			.finally(function() { btn.firstChild.data = _('Upload archive...') });
@@ -42,7 +42,7 @@
  			ui.awaitReconnect(window.location.host);
  		else
 -			ui.awaitReconnect('192.168.1.1', 'openwrt.lan');
-+			ui.awaitReconnect('10.0.0.1', 'kwrt.lan');
++			ui.awaitReconnect('10.10.10.2', 'kwrt.lan');
  	},
  
  	handleBackupList: function(ev) {
