@@ -23,7 +23,21 @@
  	uci -q set dhcp._sc_pw.comments="PassWall"
  	uci commit dhcp
  fi
-@@ -204,7 +204,7 @@ fi
+@@ -187,6 +187,13 @@ if [ -z "`uci -q get dhcp._ta`" ]; then
+ 	uci -q set dhcp._ta.ip="203.107.6.88"
+ 	uci -q set dhcp._ta.comments="time.android"
+ 	uci commit dhcp
++fi
++if [ -z "`uci -q get dhcp._kl`" ]; then
++	uci -q set dhcp._kl=domain
++	uci -q set dhcp._kl.name="kwrt.lan"
++	uci -q set dhcp._kl.ip="10.10.10.2"
++	uci -q set dhcp._kl.comments="kwrt.lan"
++	uci commit dhcp
+ fi
+ 	version=1
+ fi
+@@ -204,7 +211,7 @@ fi
  if [ -z "`uci -q get dhcp.default_server`" ]; then
  	uci -q set dhcp.default_server=domain
  	uci -q set dhcp.default_server.name='kwrt'
