@@ -12,3 +12,16 @@
 +endef
 +endif
 +
+
+--- a/package/Makefile
++++ b/package/Makefile
+@@ -120,6 +120,9 @@ endif
+ 
+ $(curdir)/index: FORCE
+ 	@echo Generating package index...
++	PACKAGE_SUFFIX:=$(if $(CONFIG_USE_APK),apk,ipk)
++	$(FIND) $(wildcard $(PACKAGE_SUBDIRS)) -path $(PACKAGE_DIR) -prune -o \
++    -type f -name '*.$(PACKAGE_SUFFIX)' -exec $(CP) -t $(PACKAGE_DIR)/ {} +
+ ifneq ($(CONFIG_USE_APK),)
+ 	@for d in $(PACKAGE_SUBDIRS); do \
+ 		mkdir -p $$d; \
