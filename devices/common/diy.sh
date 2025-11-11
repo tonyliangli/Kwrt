@@ -16,6 +16,7 @@ sed -i "s?git.openwrt.org/\(project\|feed\)?github.com/openwrt?g" feeds.conf.def
 # cd feeds/packages; rm -rf libs/libpfring; git_clone_path master https://github.com/openwrt/packages libs/libpfring; cd ../..
 # cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
 # sed -i "9a\\" feeds/kiddin9/adguardhome/patches/version.patch
+sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "feeds/packages/lang/rust/Makefile"
 ./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
