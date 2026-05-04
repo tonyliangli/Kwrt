@@ -2,7 +2,7 @@
 #=================================================
 shopt -s extglob
 
-sed -i '$a src-git kiddin9 https://github.com/kiddin9/op-packages.git;main' feeds.conf.default
+sed -i '$a src-git kiddin9 https://github.com/tonyliangli/op-packages.git;main' feeds.conf.default
 sed -i "/telephony/d" feeds.conf.default
 
 sed -i "s?targets/%S/packages?targets/%S/\$(LINUX_VERSION)?" include/feeds.mk
@@ -12,6 +12,12 @@ sed -i '/	refresh_config();/d' scripts/feeds
 sed -i "s?git.openwrt.org/\(project\|feed\)?github.com/openwrt?g" feeds.conf.default
 
 ./scripts/feeds update -a
+# cd feeds/packages; rm -rf lang/golang; git_clone_path master https://github.com/openwrt/packages lang/golang; cd ../..
+# cd feeds/packages; rm -rf libs/libpfring; git_clone_path master https://github.com/openwrt/packages libs/libpfring; cd ../..
+# cp -f feeds/kiddin9/my-default-settings/files/etc/config/nginx feeds/packages/net/nginx-util/files/nginx.config
+# sed -i "9a\\" feeds/kiddin9/adguardhome/patches/version.patch
+# sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "feeds/packages/lang/rust/Makefile"
+./scripts/feeds update -i
 ./scripts/feeds install -a -p kiddin9 -f
 ./scripts/feeds install -a
 
@@ -23,7 +29,7 @@ sed -i -e '$a /etc/bench.log' \
 sed -i -e '/^\/etc\/profile/d' \
         -e '/^\/etc\/shinit/d' \
         package/base-files/Makefile
-sed -i "s/192.168.1/10.0.0/" package/base-files/files/bin/config_generate
+sed -i "s/192.168.1/10.10.10/" package/base-files/files/bin/config_generate
 
 sed -i "s#false; \\\#true; \\\#" include/download.mk
 
@@ -45,15 +51,20 @@ coremark wget-ssl curl autocore htop nano zram-swap kmod-lib-zstd kmod-tcp-bbr b
 
 sed -i "s/^.*vermagic$/\techo '1' > \$(LINUX_DIR)\/.vermagic/" include/kernel-defaults.mk
 
-status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/op-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/tonyliangli/op-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 echo "$status"
 while [[ "$status" == "in_progress" || "$status" == "queued" ]];do
 	echo "wait 5s"
 	sleep 5
-	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/kiddin9/op-packages/actions/runs" | jq -r '.workflow_runs[0].status')
+	status=$(curl -H "Authorization: token $REPO_TOKEN" -s "https://api.github.com/repos/tonyliangli/op-packages/actions/runs" | jq -r '.workflow_runs[0].status')
 done
 
 wget -N https://raw.githubusercontent.com/openwrt/packages/master/lang/golang/golang/Makefile -P feeds/packages/lang/golang/golang/
+
+# sed -i "s/192.168.1/10.10.10/" package/feeds/kiddin9/base-files/files/bin/config_generate
+# sed -i "s/192.168.1/10.10.10/" package/base-files/files/bin/config_generate
+sed -i "s/(CpuMark/\\\ (CpuMark/" package/feeds/kiddin9/my-default-settings/files/sbin/coremark
+mv package/feeds/kiddin9/my-default-settings/files/sbin/coremark package/feeds/kiddin9/my-default-settings/files/sbin/cpumark
 
 #sed -i "/call Build\/check-size,\$\$(KERNEL_SIZE)/d" include/image.mk
 

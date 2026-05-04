@@ -1,0 +1,47 @@
+--- a/package/feeds/kiddin9/my-default-settings/files/etc/uci-defaults/99-default-settings
++++ b/package/feeds/kiddin9/my-default-settings/files/etc/uci-defaults/99-default-settings
+@@ -170,7 +170,7 @@
+ if [ -n "$(command -v nginx)" ]; then
+ 	uci add wizard shortcuts
+ 	uci set wizard.@shortcuts[-1].shortcut='pw'
+-	uci set wizard.@shortcuts[-1].to_url='http://10.0.0.1/cgi-bin/luci/admin/services/passwall'
++	uci set wizard.@shortcuts[-1].to_url='http://10.10.10.2/cgi-bin/luci/admin/services/passwall'
+ 	uci set wizard.@shortcuts[-1].comments='passwall'
+ 	uci commit wizard
+ 
+@@ -178,11 +178,11 @@
+ 	uci -q set nginx._sc_pw.server_name="pw"
+ 	uci -q add_list nginx._sc_pw.listen="80"
+ 	uci -q add_list nginx._sc_pw.listen="443"
+-	uci -q set nginx._sc_pw.return="302 http://10.0.0.1/cgi-bin/luci/admin/services/passwall"
++	uci -q set nginx._sc_pw.return="302 http://10.10.10.2/cgi-bin/luci/admin/services/passwall"
+ 
+ 	uci -q set dhcp._sc_pw=domain
+ 	uci -q set dhcp._sc_pw.name="pw"
+-	uci -q set dhcp._sc_pw.ip="10.0.0.1"
++	uci -q set dhcp._sc_pw.ip="10.10.10.2"
+ 	uci -q set dhcp._sc_pw.comments="PassWall"
+ 	uci commit dhcp
+ fi
+@@ -194,13 +194,20 @@
+ 		uci -q set dhcp._ta.comments="time.android"
+ 		uci commit dhcp
+ 	fi
++	if [ -z "$(uci -q get dhcp._kl)" ]; then
++		uci -q set dhcp._kl=domain
++		uci -q set dhcp._kl.name="kwrt.lan"
++		uci -q set dhcp._kl.ip="10.10.10.2"
++		uci -q set dhcp._kl.comments="kwrt.lan"
++		uci commit dhcp
++	fi
+ 	version=1
+ fi
+ 
+ if [ -z "$(uci -q get dhcp.default_server)" ]; then
+ 	uci -q set dhcp.default_server=domain
+ 	uci -q set dhcp.default_server.name='kwrt'
+-	uci -q set dhcp.default_server.ip='10.0.0.1'
++	uci -q set dhcp.default_server.ip='10.10.10.2'
+ 	uci -q set dhcp.default_server.comments='后台地址'
+ 	uci commit dhcp
+ fi
