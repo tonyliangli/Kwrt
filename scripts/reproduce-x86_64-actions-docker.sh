@@ -2,7 +2,6 @@
 set -Eeuo pipefail
 
 KWRT_DIR="${KWRT_DIR:-/Users/litongliang/Repositories/Git/GitHub/Kwrt}"
-OP_PACKAGES_DIR="${OP_PACKAGES_DIR:-/Users/litongliang/Repositories/Git/GitHub/op-packages}"
 TARGET="${TARGET:-x86_64}"
 EVENT_PARAM="${EVENT_PARAM:-}"
 IMAGE="${IMAGE:-ubuntu:24.04}"
@@ -27,11 +26,6 @@ fi
 
 if [ ! -d "$KWRT_DIR/.github/workflows" ]; then
 	echo "KWRT_DIR does not look like the Kwrt repository: $KWRT_DIR" >&2
-	exit 1
-fi
-
-if [ ! -d "$OP_PACKAGES_DIR/luci-base" ]; then
-	echo "OP_PACKAGES_DIR does not look like op-packages: $OP_PACKAGES_DIR" >&2
 	exit 1
 fi
 
@@ -62,7 +56,6 @@ docker run --rm -i \
 	-e GO_BOOTSTRAP_VERSION="$GO_BOOTSTRAP_VERSION" \
 	-e TZ=Asia/Shanghai \
 	-v "$KWRT_DIR:/host/Kwrt:ro" \
-	-v "$OP_PACKAGES_DIR:/host/op-packages:ro" \
 	-v "$OUTPUT_DIR:/host/output" \
 	"$IMAGE" bash -s <<'CONTAINER_SCRIPT'
 set -Eeuo pipefail
@@ -102,9 +95,8 @@ if ! id runner >/dev/null 2>&1; then
 fi
 echo 'runner ALL=(ALL) NOPASSWD:ALL' >/etc/sudoers.d/runner
 chmod 0440 /etc/sudoers.d/runner
-mkdir -p /home/runner/work/Kwrt /mnt/openwrt /host/output/logs /opt/op-packages
-rsync -a --delete --exclude='.git' /host/op-packages/ /opt/op-packages/
-chown -R runner:runner /home/runner /mnt/openwrt /host/output /opt/op-packages
+mkdir -p /home/runner/work/Kwrt /mnt/openwrt /host/output/logs
+chown -R runner:runner /home/runner /mnt/openwrt /host/output
 
 cat >/tmp/local-actions-runner.sh <<'RUNNER_SCRIPT'
 #!/usr/bin/env bash
@@ -221,9 +213,7 @@ append_env REPO_URL "$REPO_URL"
 append_env REPO_BRANCH "${REPO_BRANCH:-}"
 
 step "repo-dispatcher.yml / Trigger Packages Update"
-echo "Local run: using writable container copy at /opt/op-packages; remote dispatch is not sent."
-git config --global --add safe.directory /host/op-packages || true
-git -C /host/op-packages rev-parse --short HEAD || true
+echo "Local run: remote op-packages feed will be used by devices/common/diy.sh."
 
 step "repo-dispatcher.yml / Trigger Compile"
 echo "Local repository_dispatch event_type: $EVENT_ACTION"
@@ -251,11 +241,10 @@ append_env UPLOAD_FIRMWARE_TO_WETRANSFER "$UPLOAD_FIRMWARE_TO_WETRANSFER"
 
 sed -i "1a REPO_TOKEN=${REPO_TOKEN:-}" "$GITHUB_WORKSPACE/devices/common/diy.sh"
 sed -i "1a TARGET=$TARGET" "$GITHUB_WORKSPACE/devices/common/diy.sh"
-sed -i 's#src-git kiddin9 https://github.com/tonyliangli/op-packages.git;main#src-link kiddin9 ../local-feeds/kiddin9#' "$GITHUB_WORKSPACE/devices/common/diy.sh"
 
 step "Openwrt-AutoBuild.yml / Trigger Packages Update"
 if contains "$EVENT_ACTION" "pkg"; then
-	echo "Local run: would trigger op-packages update remotely; using mounted local op-packages instead."
+	echo "Local run: would trigger op-packages update remotely; continuing with remote feed."
 else
 	echo "Skipped, event action does not contain pkg."
 fi
@@ -349,8 +338,6 @@ cp -rf devices/common/. openwrt/
 cp -rf "devices/$TARGET/." openwrt/
 cp -rf devices openwrt/
 cd openwrt
-mkdir -p local-feeds
-rsync -a --delete /opt/op-packages/ local-feeds/kiddin9/
 chmod +x "devices/common/$DIY_SH"
 /bin/bash "devices/common/$DIY_SH"
 cp -f "devices/common/$CONFIG_FILE" .config
