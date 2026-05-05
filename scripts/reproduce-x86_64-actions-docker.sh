@@ -8,6 +8,7 @@ EVENT_PARAM="${EVENT_PARAM:-}"
 IMAGE="${IMAGE:-ubuntu:24.04}"
 APT_MIRROR="${APT_MIRROR:-http://mirrors.tuna.tsinghua.edu.cn/ubuntu}"
 APT_PORTS_MIRROR="${APT_PORTS_MIRROR:-http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports}"
+GO_BOOTSTRAP_VERSION="${GO_BOOTSTRAP_VERSION:-1.24.6}"
 OUTPUT_DIR="${OUTPUT_DIR:-$KWRT_DIR/.local-actions/${TARGET}-$(date +%Y%m%d-%H%M%S)}"
 CONTAINER_NAME="${CONTAINER_NAME:-kwrt-actions-${TARGET}-$(date +%Y%m%d-%H%M%S)}"
 SOURCE_TREE="${SOURCE_TREE:-worktree}"
@@ -58,6 +59,7 @@ docker run --rm -i \
 	-e SOURCE_TREE="$SOURCE_TREE" \
 	-e APT_MIRROR="$APT_MIRROR" \
 	-e APT_PORTS_MIRROR="$APT_PORTS_MIRROR" \
+	-e GO_BOOTSTRAP_VERSION="$GO_BOOTSTRAP_VERSION" \
 	-e TZ=Asia/Shanghai \
 	-v "$KWRT_DIR:/host/Kwrt:ro" \
 	-v "$OP_PACKAGES_DIR:/host/op-packages:ro" \
@@ -274,6 +276,22 @@ else
 	echo "Local arm64 host: skipping gcc-multilib and g++-multilib; OpenWrt target remains $TARGET."
 fi
 apt_retry sudo -E apt-get -o Acquire::Retries=5 -qq install -y --fix-missing "${APT_BUILD_PACKAGES[@]}"
+GO_BOOTSTRAP_ROOT=""
+if [ "$(dpkg --print-architecture)" = "arm64" ]; then
+	GO_BOOTSTRAP_ROOT="/opt/go-bootstrap"
+	GO_BOOTSTRAP_TARBALL="go${GO_BOOTSTRAP_VERSION}.linux-arm64.tar.gz"
+	GO_BOOTSTRAP_URL="https://go.dev/dl/${GO_BOOTSTRAP_TARBALL}"
+	GO_BOOTSTRAP_FALLBACK_URL="https://dl.google.com/go/${GO_BOOTSTRAP_TARBALL}"
+	echo "Installing Go bootstrap ${GO_BOOTSTRAP_VERSION} for arm64 host builds..."
+	rm -f "/tmp/${GO_BOOTSTRAP_TARBALL}"
+	if ! curl -fL --retry 5 --connect-timeout 20 -o "/tmp/${GO_BOOTSTRAP_TARBALL}" "$GO_BOOTSTRAP_URL"; then
+		curl -fL --retry 5 --connect-timeout 20 -o "/tmp/${GO_BOOTSTRAP_TARBALL}" "$GO_BOOTSTRAP_FALLBACK_URL"
+	fi
+	sudo rm -rf "$GO_BOOTSTRAP_ROOT" /opt/go
+	sudo tar -C /opt -xzf "/tmp/${GO_BOOTSTRAP_TARBALL}"
+	sudo mv /opt/go "$GO_BOOTSTRAP_ROOT"
+	"$GO_BOOTSTRAP_ROOT/bin/go" version
+fi
 sudo -E apt-get -qq autoremove --purge
 sudo -E apt-get -qq clean
 sudo timedatectl set-timezone "Asia/Shanghai" || sudo ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -339,6 +357,17 @@ cp -f "devices/common/$CONFIG_FILE" .config
 if [ -f "devices/$TARGET/$CONFIG_FILE" ]; then
 	echo >>.config
 	cat "devices/$TARGET/$CONFIG_FILE" >>.config
+fi
+if [ "$(dpkg --print-architecture)" = "arm64" ] && [ -x "${GO_BOOTSTRAP_ROOT:-}/bin/go" ]; then
+	sed -i \
+		-e '/^CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT=/d' \
+		-e '/^CONFIG_GOLANG_BUILD_BOOTSTRAP=/d' \
+		-e '/^# CONFIG_GOLANG_BUILD_BOOTSTRAP is not set/d' \
+		.config
+	{
+		echo "CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT=\"${GO_BOOTSTRAP_ROOT}\""
+		echo '# CONFIG_GOLANG_BUILD_BOOTSTRAP is not set'
+	} >>.config
 fi
 if [ -f "devices/$TARGET/$DIY_SH" ]; then
 	chmod +x "devices/$TARGET/$DIY_SH"
