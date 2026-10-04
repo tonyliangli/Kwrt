@@ -8,12 +8,11 @@ rm -rf package/boot package/firmware/ipq-wifi target/linux/generic target/linux/
 
 git_clone_path 25.12-nss https://github.com/LiBwrt/openwrt-6.x target/linux/generic target/linux/qualcommax package/boot package/firmware/ipq-wifi package/firmware/ath11k-firmware package/kernel/mac80211 package/kernel/nat46
 
-wget -N https://github.com/LiBwrt/openwrt-6.x/raw/refs/heads/25.12-nss/include/image-commands.mk -P include/
-wget -N https://github.com/LiBwrt/openwrt-6.x/raw/refs/heads/25.12-nss/config/Config-ipq.in -P config/
-wget -N https://github.com/LiBwrt/openwrt-6.x/raw/refs/heads/25.12-nss/Config.in -P ./
+wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/include/image-commands.mk -P include/
+wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/config/Config-ipq.in -P config/
+wget -N https://github.com/LiBwrt/LibWrt/raw/refs/heads/25.12-nss/Config.in -P ./
 
 rm -rf feeds/kiddin9/shortcut-fe
-
 
 git clone https://github.com/qosmio/nss-packages.git package/nss-packages
 git clone https://github.com/qosmio/sqm-scripts-nss.git package/sqm-scripts-nss
