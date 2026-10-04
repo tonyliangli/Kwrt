@@ -256,7 +256,7 @@ echo "Local container: external free-disk-space action is represented by this di
 step "Openwrt-AutoBuild.yml / Initialization environment"
 apt_retry sudo -E apt-get -o Acquire::Retries=5 -qq update
 APT_BUILD_PACKAGES=(build-essential clang flex bison g++ gawk gettext git libncurses5-dev libssl-dev
-	python3-setuptools rsync swig unzip zlib1g-dev file wget
+	python3-setuptools rsync swig unzip zlib1g-dev file wget dwarves
 	llvm python3-pyelftools libpython3-dev aria2 jq qemu-utils ccache rename
 	libelf-dev device-tree-compiler libgmp3-dev libmpc-dev libfuse-dev zip)
 if [ "$(dpkg --print-architecture)" = "amd64" ]; then
@@ -311,7 +311,6 @@ if [ -n "${TAG_DATE:-}" ] && [[ $(( ($(date +%s) - $(date -d "$TAG_DATE" +%s)) /
 else
 	REPO_BRANCH="openwrt-25.12"
 fi
-echo 'CONFIG_VERSION_REPO="https://dl.openwrt.ai/releases/25.12"' >>devices/common/.config
 if [[ ! "${REPO_BRANCH:-}" && "$REPO_URL" == "https://github.com/openwrt/openwrt" ]]; then
 	git clone "$REPO_URL" -b "$REPO_BRANCH" openwrt
 elif [[ ! "${REPO_BRANCH:-}" ]]; then
@@ -334,6 +333,7 @@ ln -sf /mnt/openwrt/build_dir openwrt/build_dir
 sudo ln -sf openwrt/staging_dir /mnt/openwrt/staging_dir
 
 step "Openwrt-AutoBuild.yml / Load custom configuration"
+mkdir -p openwrt
 cp -rf devices/common/. openwrt/
 cp -rf "devices/$TARGET/." openwrt/
 cp -rf devices openwrt/
@@ -372,8 +372,8 @@ cp -rn devices/common/patches "devices/$TARGET/"
 if [ -n "$(ls -A "devices/$TARGET"/*.bin.patch 2>/dev/null)" ]; then
 	git apply "devices/$TARGET"/patches/*.bin.patch
 fi
-find "devices/$TARGET/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "patch -d './' -R --no-backup-if-mismatch -p1 -F 1 --ignore-whitespace -i '%'"
-find "devices/$TARGET/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "patch -d './' --no-backup-if-mismatch -p1 -F 1 --ignore-whitespace -i '%'"
+find "devices/$TARGET/patches" -maxdepth 1 -type f -name '*.revert.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "patch -d './' -R --no-backup-if-mismatch -p1 -F 1 -i '%'"
+find "devices/$TARGET/patches" -maxdepth 1 -type f -name '*.patch' ! -name '*.revert.patch' ! -name '*.bin.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "patch -d './' --no-backup-if-mismatch -p1 -F 1 -i '%'"
 
 step "Openwrt-AutoBuild.yml / Defconfig"
 make defconfig
